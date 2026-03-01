@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mauritius Wildlife — Природа, рождённая океаном</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ================================================
+   CSS VARIABLES & RESET
+   ================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ocean-deep:    #0a2e3d;
+  --ocean-mid:     #0e5f74;
+  --ocean-light:   #1a9baa;
+  --teal:          #2bc4c4;
+  --aqua:          #7ee8e8;
+  --foam:          #e8f7f8;
+  --sand:          #f5e9d3;
+  --sand-dark:     #d9c8a8;
+  --warm-white:    #fdfaf5;
+  --coral:         #e07a5f;
+  --text-dark:     #0f2027;
+  --text-mid:      #2a5260;
+  --text-light:    #6b9dab;
+  --ff-serif:      'Cormorant Garamond', Georgia, serif;
+  --ff-sans:       'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--ff-sans);
+  background: var(--warm-white);
+  color: var(--text-dark);
+  overflow-x: hidden;
+}
+
+img { display: block; width: 100%; object-fit: cover; }
+
+/* ================================================
+   HEADER
+   ================================================ */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 5vw;
+  transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
+}
+
+header.scrolled {
+  background: rgba(10, 46, 61, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 2px 24px rgba(0,0,0,0.18);
+}
+
+/* Logo */
+.logo {
+  font-family: var(--ff-serif);
+  font-size: 1.55rem;
+  font-weight: 300;
+  color: #fff;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.logo span.accent { color: var(--aqua); font-style: italic; }
+
+/* Nav */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+nav a {
+  font-family: var(--ff-sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255,255,255,0.85);
+  padding: 0.5rem 1.1rem;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50px;
+  transition: color 0.25s, border-color 0.25s, background 0.25s;
+}
+nav a:hover {
+  color: #fff;
+  border-color: var(--teal);
+  background: rgba(43,196,196,0.12);
+}
+nav a.primary {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--ocean-deep);
+  font-weight: 500;
+}
+nav a.primary:hover {
+  background: var(--aqua);
+  border-color: var(--aqua);
+}
+
+/* Burger */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+.burger span {
+  display: block;
+  width: 24px; height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* Mobile nav overlay */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,46,61,0.97);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-family: var(--ff-serif);
+  font-size: 2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.mobile-nav a:hover { color: var(--teal); }
+.mobile-nav-close {
+  position: absolute;
+  top: 1.4rem; right: 5vw;
+  font-size: 1.8rem;
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: none;
+  line-height: 1;
+}
+
+/* ================================================
+   HERO
+   ================================================ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--ocean-deep);
+}
+
+/* Animated gradient background */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%, #0e4f6a 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 30%, #0a7a80 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 55% 80%, #0d3545 0%, transparent 50%),
+    linear-gradient(160deg, #062030 0%, #0e4c62 40%, #0a7870 100%);
+  animation: heroShimmer 12s ease-in-out infinite alternate;
+}
+@keyframes heroShimmer {
+  0%   { filter: brightness(1)   hue-rotate(0deg); }
+  50%  { filter: brightness(1.07) hue-rotate(4deg); }
+  100% { filter: brightness(0.95) hue-rotate(-4deg); }
+}
+
+/* Parallax layer */
+.hero-parallax {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Light caustic circles */
+.caustic {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(43,196,196,0.18) 0%, transparent 70%);
+  animation: float linear infinite;
+  pointer-events: none;
+}
+.caustic:nth-child(1) { width:520px; height:520px; top:-10%; left:-5%;  animation-duration:18s; }
+.caustic:nth-child(2) { width:380px; height:380px; top:30%; right:-8%; animation-duration:22s; animation-delay:-7s; }
+.caustic:nth-child(3) { width:280px; height:280px; bottom:5%; left:30%; animation-duration:15s; animation-delay:-4s; }
+@keyframes float {
+  0%,100% { transform: translateY(0) scale(1); opacity:0.6; }
+  50%      { transform: translateY(-30px) scale(1.05); opacity:1; }
+}
+
+/* Hero content */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 6vw;
+  max-width: 900px;
+}
+
+.hero-eyebrow {
+  font-family: var(--ff-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 1.6rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.9s 0.3s forwards;
+}
+
+.hero-title {
+  font-family: var(--ff-serif);
+  font-size: clamp(3.2rem, 8vw, 7rem);
+  font-weight: 300;
+  line-height: 1.08;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1s 0.55s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--aqua);
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.7);
+  max-width: 560px;
+  margin: 0 auto 2.8rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.9s 0.8s forwards;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--ff-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ocean-deep);
+  background: var(--teal);
+  padding: 0.9rem 2.4rem;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  opacity: 0;
+  animation: fadeUp 0.9s 1s forwards;
+}
+.hero-cta:hover {
+  background: var(--aqua);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(43,196,196,0.4);
+}
+.hero-cta svg { transition: transform 0.25s; }
+.hero-cta:hover svg { transform: translateY(3px); }
+
+/* Wave SVG divider */
+.hero-wave {
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  z-index: 3;
+  line-height: 0;
+}
+.hero-wave svg { width: 100%; }
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================================
+   SECTION BASE
+   ================================================ */
+section {
+  padding: 7rem 6vw;
+}
+
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ocean-light);
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+.section-title {
+  font-family: var(--ff-serif);
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  font-weight: 300;
+  line-height: 1.18;
+  color: var(--ocean-deep);
+  margin-bottom: 1rem;
+}
+.section-title em { font-style: italic; color: var(--ocean-light); }
+.section-desc {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  max-width: 580px;
+  font-weight: 300;
+}
+
+/* ================================================
+   SPECIES CARDS
+   ================================================ */
+#species {
+  background: var(--warm-white);
+}
+
+.species-header {
+  margin-bottom: 4rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.8rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(10,46,61,0.07);
+  transition: transform 0.35s cubic-bezier(.22,.68,0,1.2), box-shadow 0.35s;
+  opacity: 0;
+  transform: translateY(40px);
+}
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.22,.68,0,1.2), box-shadow 0.35s;
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 16px 48px rgba(10,46,61,0.14);
+}
+
+.card-img {
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+}
+.card-img img {
+  height: 100%;
+  transition: transform 0.6s ease;
+}
+.card:hover .card-img img { transform: scale(1.07); }
+
+.card-tag {
+  position: absolute;
+  top: 1rem; left: 1rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  background: rgba(10,46,61,0.65);
+  backdrop-filter: blur(8px);
+  color: var(--aqua);
+  padding: 0.3rem 0.75rem;
+  border-radius: 50px;
+}
+
+.card-body {
+  padding: 1.5rem 1.6rem 1.8rem;
+}
+
+.card-body h3 {
+  font-family: var(--ff-serif);
+  font-size: 1.45rem;
+  font-weight: 400;
+  color: var(--ocean-deep);
+  margin-bottom: 0.25rem;
+  line-height: 1.2;
+}
+.card-body h3 em {
+  display: block;
+  font-size: 0.8rem;
+  font-family: var(--ff-sans);
+  font-style: italic;
+  color: var(--text-light);
+  font-weight: 300;
+  margin-top: 0.1rem;
+}
+
+.card-body p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+  font-weight: 300;
+  margin-top: 0.7rem;
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ocean-light);
+  text-decoration: none;
+  transition: color 0.2s, gap 0.2s;
+}
+.card-link:hover { color: var(--teal); gap: 0.7rem; }
+
+/* ================================================
+   FACTS SECTION
+   ================================================ */
+#facts {
+  background: var(--ocean-deep);
+  position: relative;
+  overflow: hidden;
+}
+
+.facts-bg-wave {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.facts-header { margin-bottom: 4rem; }
+.facts-header .section-title { color: #fff; }
+.facts-header .section-desc { color: rgba(255,255,255,0.55); }
+
+.facts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.fact-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+.fact-item.visible { opacity: 1; transform: translateY(0); }
+
+.fact-number {
+  font-family: var(--ff-serif);
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--teal);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.fact-item h4 {
+  font-family: var(--ff-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.03em;
+}
+
+.fact-item p {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.5);
+  font-weight: 300;
+}
+
+/* Decorative coral SVG */
+.deco-coral {
+  position: absolute;
+  bottom: 0; right: 4vw;
+  opacity: 0.07;
+  width: 320px;
+  pointer-events: none;
+}
+
+/* ================================================
+   DONATE STRIP
+   ================================================ */
+.donate-strip {
+  background: var(--sand);
+  padding: 5rem 6vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+.donate-strip h2 {
+  font-family: var(--ff-serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  color: var(--ocean-deep);
+  line-height: 1.2;
+}
+.donate-strip h2 em { font-style: italic; color: var(--coral); }
+.donate-strip p {
+  font-size: 1rem;
+  color: var(--text-mid);
+  max-width: 500px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+.donate-btns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn-primary {
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--ocean-mid);
+  padding: 0.85rem 2.2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.2s;
+}
+.btn-primary:hover { background: var(--ocean-light); transform: translateY(-2px); }
+.btn-outline {
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ocean-mid);
+  background: transparent;
+  padding: 0.85rem 2.2rem;
+  border-radius: 50px;
+  border: 1.5px solid var(--ocean-mid);
+  text-decoration: none;
+  transition: background 0.25s, color 0.25s, transform 0.2s;
+}
+.btn-outline:hover { background: var(--ocean-mid); color: #fff; transform: translateY(-2px); }
+
+/* ================================================
+   FOOTER
+   ================================================ */
+footer {
+  background: var(--ocean-deep);
+  color: rgba(255,255,255,0.45);
+  padding: 2.5rem 6vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.82rem;
+  font-weight: 300;
+}
+
+.footer-logo {
+  font-family: var(--ff-serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.65);
+  font-style: italic;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 1.15rem;
+}
+.footer-socials span {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.footer-socials span:hover { opacity: 1; }
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 768px) {
+  nav { display: none; }
+  .burger { display: flex; }
+
+  section { padding: 5rem 5vw; }
+
+  .cards-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+  .facts-grid { grid-template-columns: 1fr 1fr; }
+
+  footer { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 2.8rem; }
+  .facts-grid { grid-template-columns: 1fr; }
+}
+
+/* ================================================
+   SCROLL REVEAL UTILITY
+   ================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+
+<body>
+
+<!-- ================================================
+     HEADER
+     ================================================ -->
+<header id="header">
+  <a class="logo" href="/">🌊 Mauritius <span class="accent">Wildlife</span></a>
+
+  <nav>
+    <a href="/buy-merch">Купить мерч</a>
+    <a href="/donate" class="primary">Пожертвовать</a>
+    <a href="/about-us">О проекте</a>
+  </nav>
+
+  <!-- Burger for mobile -->
+  <button class="burger" id="burgerBtn" aria-label="Открыть меню">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- Mobile nav overlay -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+  <a href="/buy-merch">Купить мерч</a>
+  <a href="/donate">Пожертвовать</a>
+  <a href="/about-us">О проекте</a>
+</div>
+
+<!-- ================================================
+     HERO
+     ================================================ -->
+<section class="hero" id="home">
+  <!-- Animated gradient background -->
+  <div class="hero-bg"></div>
+
+  <!-- Light caustic floating blobs -->
+  <div class="hero-parallax" id="heroParallax">
+    <div class="caustic"></div>
+    <div class="caustic"></div>
+    <div class="caustic"></div>
+  </div>
+
+  <!-- Main text -->
+  <div class="hero-content">
+    <p class="hero-eyebrow">Индийский океан · Остров Маврикий</p>
+    <h1 class="hero-title">Природа,<br><em>рождённая</em><br>океаном</h1>
+    <p class="hero-sub">
+      Маврикий — один из немногих островов Земли, где природа сохранила
+      свою первозданную магию. Бирюзовые лагуны, реликтовые леса и виды,
+      которых нет больше нигде на планете.
+    </p>
+    <a href="#species" class="hero-cta">
+      Исследовать
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1v12M1 7l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Wave SVG divider -->
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 40C240 80 480 0 720 40C960 80 1200 0 1440 40V80H0V40Z" fill="#fdfaf5"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ================================================
+     SPECIES SECTION
+     ================================================ -->
+<section id="species">
+  <div class="species-header reveal">
+    <p class="section-label">Флора и фауна</p>
+    <h2 class="section-title">Уникальные <em>виды</em></h2>
+    <p class="section-desc">
+      Изолированность острова породила существа, не имеющие аналогов в природе.
+      Каждый вид — страница живой истории эволюции.
+    </p>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- Card 1: Дневной геккон -->
+    <article class="card">
+      <div class="card-img">
+        <img
+          id="img-gecko"
+          src=""
+          alt="Дневной геккон Маврикия — Phelsuma ornata"
+          loading="lazy">
+        <span class="card-tag">Рептилии</span>
+      </div>
+      <div class="card-body">
+        <h3>Дневной геккон
+          <em>Phelsuma ornata</em>
+        </h3>
+        <p>Изумрудный страж тропических садов Маврикия. Этот геккон-эндемик
+          переливается сине-зелёной окраской с ярко-красными пятнами и активен
+          при дневном свете — редкость среди ящериц. Опылитель растений,
+          незаменимый для экосистемы острова.</p>
+        <a href="#" class="card-link">
+          Подробнее
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- Card 2: Летучая лисица -->
+    <article class="card">
+      <div class="card-img">
+        <img
+          id="img-bat"
+          src=""
+          alt="Маврикийская летучая лисица в полёте — Pteropus niger"
+          loading="lazy">
+        <span class="card-tag">Млекопитающие</span>
+      </div>
+      <div class="card-body">
+        <h3>Маврикийская летучая лисица
+          <em>Pteropus niger</em>
+        </h3>
+        <p>Единственный эндемичный наземный млекопитающий острова.
+          Ночной опылитель манговых и личи-деревьев, без которого местные
+          плодовые леса потеряли бы способность к воспроизводству.
+          Находится под угрозой исчезновения.</p>
+        <a href="#" class="card-link">
+          Подробнее
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- Card 3: Бутылочная пальма -->
+    <article class="card">
+      <div class="card-img">
+        <img
+          id="img-palm"
+          src=""
+          alt="Бутылочная пальма Маврикия — Hyophorbe lagenicaulis"
+          loading="lazy">
+        <span class="card-tag">Флора</span>
+      </div>
+      <div class="card-body">
+        <h3>Бутылочная пальма
+          <em>Hyophorbe lagenicaulis</em>
+        </h3>
+        <p>Одно из самых редких деревьев мира. Вздутый ствол, напоминающий
+          бутыль, служит резервуаром влаги и питательных веществ. В дикой
+          природе сохранилось лишь несколько экземпляров на островке
+          Раунд-Айленд близ берегов Маврикия.</p>
+        <a href="#" class="card-link">
+          Подробнее
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- Card 4: Коралловые рифы Голубой бухты -->
+    <article class="card">
+      <div class="card-img">
+        <img
+          id="img-reef"
+          src=""
+          alt="Лагуна Голубой бухты — Маврикий"
+          loading="lazy">
+        <span class="card-tag">Морская фауна</span>
+      </div>
+      <div class="card-body">
+        <h3>Лагуна Голубой бухты
+          <em>Blue Bay Marine Park</em>
+        </h3>
+        <p>Морской парк Блю-Бэй — жемчужина Индийского океана. Бирюзовая лагуна
+          хранит более 50 видов кораллов и 70 видов рыб: попугаи-рыбы, бабочки,
+          мурены. Здесь кормятся зелёные морские черепахи и резвятся дельфины.
+          Охраняемая территория с 1997 года.</p>
+        <a href="#" class="card-link">
+          Подробнее
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================================================
+     FACTS SECTION
+     ================================================ -->
+<section id="facts">
+  <!-- Wavy top overlay -->
+  <div class="facts-bg-wave">
+    <svg viewBox="0 0 1440 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 80C360 0 720 160 1080 80C1260 40 1380 90 1440 80V0H0V80Z" fill="white"/>
+    </svg>
+  </div>
+
+  <!-- Decorative coral -->
+  <svg class="deco-coral" viewBox="0 0 240 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M120 360 C120 360 60 300 60 220 C60 160 90 140 90 80 C90 40 75 10 75 10" stroke="white" stroke-width="6" stroke-linecap="round"/>
+    <path d="M90 80 C70 60 40 65 30 50" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <path d="M90 120 C65 115 45 125 35 110" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <path d="M60 220 C35 210 20 230 10 220" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <path d="M120 360 C120 360 180 300 180 220 C180 160 150 140 150 80 C150 40 165 10 165 10" stroke="white" stroke-width="6" stroke-linecap="round"/>
+    <path d="M150 80 C170 60 200 65 210 50" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <path d="M150 120 C175 115 195 125 205 110" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <path d="M180 220 C205 210 220 230 230 220" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="75" cy="10" r="6" fill="white"/>
+    <circle cx="165" cy="10" r="6" fill="white"/>
+    <circle cx="30" cy="50" r="5" fill="white"/>
+    <circle cx="210" cy="50" r="5" fill="white"/>
+    <circle cx="35" cy="110" r="4" fill="white"/>
+    <circle cx="205" cy="110" r="4" fill="white"/>
+    <circle cx="10" cy="220" r="5" fill="white"/>
+    <circle cx="230" cy="220" r="5" fill="white"/>
+  </svg>
+
+  <div class="facts-header reveal">
+    <p class="section-label" style="color:var(--teal)">Знаете ли вы?</p>
+    <h2 class="section-title">Цифры и <em>факты</em></h2>
+    <p class="section-desc">Маврикий удивляет на каждом шагу — от геологии до биоразнообразия.</p>
+  </div>
+
+  <div class="facts-grid">
+    <div class="fact-item">
+      <div class="fact-number">600+</div>
+      <h4>Видов растений</h4>
+      <p>Более 600 видов флоры произрастают исключительно на Маврикии и нигде больше на Земле.</p>
+    </div>
+    <div class="fact-item">
+      <div class="fact-number">10 млн</div>
+      <h4>Лет острову</h4>
+      <p>Маврикий появился в результате вулканической активности и является одним из древнейших островов Индийского океана.</p>
+    </div>
+    <div class="fact-item">
+      <div class="fact-number">330</div>
+      <h4>Солнечных дней</h4>
+      <p>В среднем 330 солнечных дней в году — идеальные условия для коралловых рифов и уникальной морской жизни.</p>
+    </div>
+    <div class="fact-item">
+      <div class="fact-number">38°C</div>
+      <h4>Температура воды</h4>
+      <p>Тёплые воды лагун в сезон достигают 28–38°C, создавая неповторимую среду для морских черепах и тропических рыб.</p>
+    </div>
+    <div class="fact-item">
+      <div class="fact-number">1865</div>
+      <h4>Год последнего Додо</h4>
+      <p>Дронт исчез всего за несколько десятилетий после появления человека — тревожное напоминание об уязвимости экосистем.</p>
+    </div>
+    <div class="fact-item">
+      <div class="fact-number">2&nbsp;000&nbsp;км²</div>
+      <h4>Площадь острова</h4>
+      <p>Несмотря на скромные размеры, Маврикий вмещает потрясающее биоразнообразие: горы, влажные тропические леса, коралловые рифы.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     DONATE STRIP
+     ================================================ -->
+<div class="donate-strip">
+  <h2>Сохраним <em>природу</em><br>вместе</h2>
+  <p>Каждое пожертвование помогает защитить эндемичные виды Маврикия
+  и восстановить утраченные фрагменты первозданного леса.</p>
+  <div class="donate-btns">
+    <a href="/donate" class="btn-primary">Пожертвовать сейчас</a>
+    <a href="/buy-merch" class="btn-outline">Купить мерч</a>
+  </div>
+</div>
+
+<!-- ================================================
+     FOOTER
+     ================================================ -->
+<footer>
+  <span class="footer-logo">🌊 Mauritius Wildlife</span>
+  <span>© 2025 Mauritius Wildlife. Все права защищены.</span>
+  <div class="footer-socials">
+    <span title="Instagram">📸</span>
+    <span title="Twitter/X">🐦</span>
+    <span title="Facebook">🌐</span>
+    <span title="YouTube">▶️</span>
+  </div>
+</footer>
+
+<!-- ================================================
+     JAVASCRIPT
+     ================================================ -->
+<script>
+/* ------------------------------------------------
+   HEADER — добавление класса .scrolled при скролле
+   ------------------------------------------------ */
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ------------------------------------------------
+   BURGER MENU (mobile)
+   ------------------------------------------------ */
+const burgerBtn   = document.getElementById('burgerBtn');
+const mobileNav   = document.getElementById('mobileNav');
+const mobileClose = document.getElementById('mobileNavClose');
+
+burgerBtn.addEventListener('click', () => mobileNav.classList.add('open'));
+mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+// Закрываем при клике на ссылку
+mobileNav.querySelectorAll('a').forEach(a =>
+  a.addEventListener('click', () => mobileNav.classList.remove('open'))
+);
+
+/* ------------------------------------------------
+   PARALLAX на hero — лёгкое смещение при скролле
+   ------------------------------------------------ */
+const heroParallax = document.getElementById('heroParallax');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  heroParallax.style.transform = `translateY(${y * 0.3}px)`;
+}, { passive: true });
+
+/* ------------------------------------------------
+   INTERSECTION OBSERVER — появление элементов
+   при прокрутке (класс .reveal и карточки .card)
+   ------------------------------------------------ */
+const observerOptions = {
+  threshold: 0.12,
+  rootMargin: '0px 0px -40px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target); // animate once
+    }
+  });
+}, observerOptions);
+
+// Наблюдаем за .reveal-элементами
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Карточки с задержкой (stagger)
+document.querySelectorAll('.card').forEach((card, i) => {
+  card.style.transitionDelay = `${i * 0.12}s`;
+  observer.observe(card);
+});
+
+/* ------------------------------------------------
+   ЗАГРУЗКА ФОТОГРАФИЙ КАРТОЧЕК
+   Устанавливаем src из JS (не из HTML),
+   перебираем источники до первого рабочего.
+   ------------------------------------------------ */
+const cardImages = [
+  {
+    id: 'img-gecko',
+    fallback: 'Phelsuma ornata',
+    fallbackColor: '0e5f74/7ee8e8',
+    sources: [
+      // Confirmed Wikimedia: by Luke J. Harmon, CC BY 2.5
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Phelsuma_ornata_-_journal.pbio.1001382.png/600px-Phelsuma_ornata_-_journal.pbio.1001382.png',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Phelsuma_ornata_-_journal.pbio.1001382.png?width=600',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Phelsuma_ornata.jpg?width=600',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Phelsuma_cepediana_male.jpg?width=600',
+    ]
+  },
+  {
+    id: 'img-bat',
+    fallback: 'Pteropus niger',
+    fallbackColor: '0a2e3d/2bc4c4',
+    sources: [
+      // Confirmed Wikimedia: Mauritian flying fox in flight
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Mauritian_flying_fox_%28Pteropus_niger%29_in_flight_2.jpg/600px-Mauritian_flying_fox_%28Pteropus_niger%29_in_flight_2.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Mauritian_flying_fox_%28Pteropus_niger%29_male_in_flight.jpg/600px-Mauritian_flying_fox_%28Pteropus_niger%29_male_in_flight.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Mauritian_flying_fox_%28Pteropus_niger%29_in_flight_3.jpg/600px-Mauritian_flying_fox_%28Pteropus_niger%29_in_flight_3.jpg',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Mauritian_flying_fox_%28Pteropus_niger%29_in_flight_2.jpg?width=600',
+    ]
+  },
+  {
+    id: 'img-palm',
+    fallback: 'Hyophorbe lagenicaulis',
+    fallbackColor: '1a7a3a/e8f7f8',
+    sources: [
+      // Confirmed Wikimedia bottle palm
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Hyophorbe_lagenicaulis1.jpg/600px-Hyophorbe_lagenicaulis1.jpg',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Hyophorbe_lagenicaulis1.jpg?width=600',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Hyophorbe_lagenicaulis.jpg?width=600',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Bottle_palm_%28Hyophorbe_lagenicaulis%29.jpg?width=600',
+    ]
+  },
+  {
+    id: 'img-reef',
+    fallback: 'Blue Bay Mauritius',
+    fallbackColor: '0e4c62/7ee8e8',
+    sources: [
+      // Confirmed Wikimedia: Blue Bay lagoon aerial view
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Blue-Bay-Ile-Maurice-2009.jpg/600px-Blue-Bay-Ile-Maurice-2009.jpg',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Blue-Bay-Ile-Maurice-2009.jpg?width=600',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/2006-10-04_Blue_Bay%2C_Mauritius_4.jpg?width=600',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Mauritius_Dawn_%2834354057762%29.jpg?width=600',
+    ]
+  }
+];
+
+function loadCardImage({ id, sources, fallback, fallbackColor }) {
+  const img = document.getElementById(id);
+  if (!img) return;
+  let idx = 0;
+
+  function tryNext() {
+    if (idx >= sources.length) {
+      img.onerror = null;
+      img.src = `https://placehold.co/600x400/${fallbackColor}?text=${encodeURIComponent(fallback)}`;
+      return;
+    }
+    const src = sources[idx++];
+    img.onerror = tryNext;
+    img.src = src;
+  }
+
+  tryNext(); // start loading from first source
+}
+
+// Запускаем загрузку после готовности DOM
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => cardImages.forEach(loadCardImage));
+} else {
+  cardImages.forEach(loadCardImage);
+}
+</script>
+
+</body>
+</html>
