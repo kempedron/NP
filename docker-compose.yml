@@ -1,0 +1,70 @@
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: cmd/api-gateway/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - BANK_SERVICE_URL=http://bank-service:8080
+      - ORDER_SERVICE_URL=http://order-service:8080
+      - USER_SERVICE_URL=http://user-service:8080
+      - WEB_SERVICE_URL=http://web-service:8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=dbUser
+      - DB_PASSWORD=dbPassword
+      - DB_NAME=my_db
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy   
+
+  web-service:
+    build:
+      context: .
+      dockerfile: cmd/web-service/Dockerfile
+    environment:
+      - PORT=8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=dbUser
+      - DB_PASSWORD=dbPassword
+      - DB_NAME=my_db
+      
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15-alpine
+    container_name: mauritius_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: my_db                
+      POSTGRES_USER: dbUser              
+      POSTGRES_PASSWORD: dbPassword      
+      DB_HOST: db
+      DB_PORT: 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"                      
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dbUser -d my_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:

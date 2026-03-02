@@ -1,8 +1,8 @@
 package main
 
 import (
-	handler2 "NP/internal/order-service/handler"
-	handler "NP/internal/web-service/handler"
+	webHandler "NP/internal/web-service/handler"
+	"NP/internal/web-service/service"
 
 	"html/template"
 	"log"
@@ -15,17 +15,21 @@ func InitTemplates() *template.Template {
 	return template.Must(template.ParseGlob("web/templates/*.html"))
 }
 
-var r = mux.NewRouter()
-
 func main() {
+	if err := service.InitDB(); err != nil {
+		log.Fatalf("error init database: %s", err)
+	}
+	r := mux.NewRouter()
 	tmpl := InitTemplates()
-	r.HandleFunc("/", handler.MakeHandlerMainPage(tmpl))
-	r.HandleFunc("/about", handler.MakeHandlerAboutPage(tmpl))
-	r.HandleFunc("/buy-merch", handler.MakeHandlerBuyMerchPage(tmpl))
-	r.HandleFunc("/add-to-card/{product-id:[0-9]+}/{cart-id:[0-9]+}/{quantity:[0-9]+}", handler2.AddToCart).Methods("POST")
-	r.HandleFunc("/get-all-from-card", handler2.MakeGetAllCart(tmpl)).Methods("GET")
-	err := http.ListenAndServe("127.0.0.1:8080", r)
-	if err != nil {
-		log.Fatalf("eror start web server: %v", err)
+
+	r.HandleFunc("/", webHandler.MakeHandlerMainPage(tmpl)).Methods("GET")
+	r.HandleFunc("/about-us", webHandler.MakeHandlerAboutPage(tmpl)).Methods("GET")
+	r.HandleFunc("/buy-merch", webHandler.MakeHandlerBuyMerchPage(tmpl)).Methods("GET")
+	r.HandleFunc("/donate", webHandler.MakeHandlerDonatePage(tmpl)).Methods("GET")
+	r.HandleFunc("/donate/{category}/{username}/{moneySum}", webHandler.MakeHandlerDonate).Methods("POST")
+
+	log.Println("Server started on http://0.0.0.0:8080")
+	if err := http.ListenAndServe(":8080", r); err != nil {
+		log.Fatalf("error starting web server: %v", err)
 	}
 }

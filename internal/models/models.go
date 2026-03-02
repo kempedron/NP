@@ -1,6 +1,7 @@
 package models
 
 import (
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -10,6 +11,15 @@ type User struct {
 	PasswordHash string       `gorm:"type:varchar(100);not null" json:"-"`
 	BankAccount  *BankAccount `json:"bank_account,omitempty"`
 	Cart         *Cart        `json:"cart,omitempty"`
+}
+
+func (u *User) HashPassword(password string) error {
+	hashedpassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	u.PasswordHash = string(hashedpassword)
+	return nil
 }
 
 func (User) TableName() string {
@@ -64,12 +74,13 @@ func (BankAccount) TableName() string {
 	return "bank_accounts"
 }
 
-// type Catalog struct {
-// 	gorm.Model
-// 	Price uint `gorm:"type:BIGINT;not null" json:"price"`
-// }
+type Donate struct {
+	gorm.Model
+	Username  string `gorm:"type:varchar(50);not null" json:"username"`
+	MoneySumm uint   `gorm:"type:BIGINT;not null" json:"price"`
+	Category  string `gorm:"type:varchar(100);not null" json:"category"`
+}
 
-// func (Catalog) TableName() string {
-// 	return "bank_accounts"
-// }
-//
+func (Donate) TableName() string {
+	return "donates"
+}
