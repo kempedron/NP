@@ -1,8 +1,8 @@
 package main
 
 import (
+	"NP/internal/database"
 	webHandler "NP/internal/web-service/handler"
-	"NP/internal/web-service/service"
 
 	"html/template"
 	"log"
@@ -16,8 +16,8 @@ func InitTemplates() *template.Template {
 }
 
 func main() {
-	if err := service.InitDB(); err != nil {
-		log.Fatalf("error init database: %s", err)
+	if err := database.InitDB(); err != nil {
+		log.Fatalf("error init db for web-service: %s", err)
 	}
 	r := mux.NewRouter()
 	tmpl := InitTemplates()

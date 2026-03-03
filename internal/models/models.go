@@ -22,6 +22,10 @@ func (u *User) HashPassword(password string) error {
 	return nil
 }
 
+func (u User) CheckPassword(password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
+}
+
 func (User) TableName() string {
 	return "users"
 }

@@ -1,13 +1,13 @@
 package service
 
 import (
+	"NP/internal/database"
 	"NP/internal/models"
-	"NP/internal/web-service/service"
 	"fmt"
 	"log"
 )
 
-var DB = service.DB
+var DB = database.DB
 
 func AddProductByIdToCart(productId uint, cartId uint, quantity uint) error {
 

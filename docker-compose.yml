@@ -11,11 +11,11 @@ services:
       - ORDER_SERVICE_URL=http://order-service:8080
       - USER_SERVICE_URL=http://user-service:8080
       - WEB_SERVICE_URL=http://web-service:8080
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=dbUser
-      - DB_PASSWORD=dbPassword
-      - DB_NAME=my_db
+      # - DB_HOST=db
+      # - DB_PORT=5432
+      # - DB_USER=dbUser
+      # - DB_PASSWORD=dbPassword
+      # - DB_NAME=my_db
     networks:
       - backend
     depends_on:
@@ -33,7 +33,47 @@ services:
       - DB_USER=dbUser
       - DB_PASSWORD=dbPassword
       - DB_NAME=my_db
-      
+      - JWT_SECRET="1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930"
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+
+  bank-service:
+    build:
+      context: .
+      dockerfile: cmd/bank-service/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PORT=8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=dbUser
+      - DB_PASSWORD=dbPassword
+      - DB_NAME=my_db
+      - JWT_SECRET="1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930"
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+
+  user-service:
+    build:
+      context: .
+      dockerfile: cmd/user-service/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PORT=8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=dbUser
+      - DB_PASSWORD=dbPassword
+      - DB_NAME=my_db
+      - JWT_SECRET="1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930"
     networks:
       - backend
     depends_on:

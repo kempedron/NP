@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"NP/internal/web-service/service"
+	"NP/internal/database"
 	"html/template"
 	"log"
 	"net/http"
@@ -40,7 +40,7 @@ func MakeHandlerDonate(w http.ResponseWriter, r *http.Request) {
 	username := vars["username"]
 	moneySum := GetParamByUrl("moneySum", r)
 
-	err := service.AddDonate(username, moneySum, category)
+	err := database.AddDonate(username, moneySum, category)
 	if err != nil {
 		log.Printf("error donating(user:%s category:%s money:%d): %s", username, category, moneySum, err)
 	}

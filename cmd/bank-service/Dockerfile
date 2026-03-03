@@ -9,4 +9,6 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=builder /app/cmd/bank-service .
+COPY --from=builder /app/web /root/web
+
 CMD ["./bank-service"]
