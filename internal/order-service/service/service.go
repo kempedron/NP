@@ -79,3 +79,59 @@ func GettAllProductsFromCart(userID uint) ([]RespForGetProducts, error) {
 
 	return result, nil
 }
+
+func PayCart(userID uint) error {
+	var cart models.Cart
+	if err := database.DB.Preload("Items.Product").Where("user_id = ?", userID).First(&cart).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fmt.Errorf("cart not found for user %d", userID)
+		}
+		log.Printf("error find cart for user %d: %s", userID, err)
+		return fmt.Errorf("error find cart for user %d: %w", userID, err)
+	}
+
+	var totalCost uint64
+	for _, item := range cart.Items {
+		if item.Product != nil {
+			totalCost += uint64(item.Product.Price) * uint64(item.Quantity)
+		}
+	}
+	if totalCost == 0 {
+		return fmt.Errorf("cart is empty for user %d", userID)
+	}
+
+	var bankAccount models.BankAccount
+	if err := database.DB.Where("user_id = ?", userID).First(&bankAccount).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fmt.Errorf("bank account not found for user %d", userID)
+		}
+		log.Printf("error find bank account for user %d: %s", userID, err)
+		return fmt.Errorf("error find bank account for user %d: %w", userID, err)
+	}
+
+	if totalCost > bankAccount.Balance {
+		return fmt.Errorf("insufficient balance in bank account for user %d", userID)
+	}
+
+	if err := database.PayPurchase(userID, totalCost); err != nil {
+		return fmt.Errorf("error pay purchase: %w", err)
+	}
+
+	return nil
+}
+
+func GetMyPurchases(userID uint) ([]models.Purchases, error) {
+	var purchases []models.Purchases
+	if err := database.DB.Preload("PurchasesList", func(db *gorm.DB) *gorm.DB {
+		return db.Unscoped()
+	}).
+		Preload("PurchasesList.Product").
+		Where("user_id = ?", userID).Find(&purchases).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("purchases not found for user %d", userID)
+		}
+		log.Printf("error find purchases for user %d: %s", userID, err)
+		return nil, fmt.Errorf("error find purchases for user %d: %w", userID, err)
+	}
+	return purchases, nil
+}

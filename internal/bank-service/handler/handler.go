@@ -4,6 +4,7 @@ import (
 	"NP/internal/bank-service/service"
 	"NP/internal/database"
 	"NP/internal/middlewware"
+	"NP/internal/models"
 	"html/template"
 	"log"
 	"net/http"
@@ -81,11 +82,49 @@ func MakeHandlerTopUpWallet(w http.ResponseWriter, r *http.Request) {
 	}
 	moneySum := GetParamByUrl("moneySum", r)
 
-	err = database.TopUpWallet(userID, uint64(moneySum))
+	err = database.TopUpWalletBalance(userID, uint64(moneySum))
 	if err != nil {
 		log.Printf("error top up wallet(user:%d money:%d): %s", userID, moneySum, err)
 	}
 
 	http.Redirect(w, r, "/my-wallet", http.StatusSeeOther)
 
+}
+
+type ForRender struct {
+	Transactions []models.Transaction
+	TotalTopUp   int64
+	TotalDebit   int64
+	Count        int64
+}
+
+func MakeHandlerTransactionsHistory(tmpl *template.Template) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID, err := middlewware.GetUserIDFromRequest(r)
+		if err != nil {
+			log.Printf("error get user id from request: %s", err)
+			return
+		}
+
+		var account models.BankAccount
+
+		database.DB.Where("user_id = ?", userID).First(&account)
+
+		transactions, err := database.GetTransactionsHistory(account.ID)
+		if err != nil {
+			log.Printf("error get transactions history(account:%d): %s", account.ID, err)
+		}
+
+		transactionsSummary, err := database.GetTransactionsSummary(account.ID)
+		if err != nil {
+			log.Printf("error get transactions summary(account:%d): %s", account.ID, err)
+		}
+
+		tmpl.ExecuteTemplate(w, "transactionsHistory.html", ForRender{
+			Transactions: transactions,
+			TotalTopUp:   transactionsSummary.TotalTopUp,
+			TotalDebit:   transactionsSummary.TotalDebit,
+			Count:        transactionsSummary.Count,
+		})
+	}
 }

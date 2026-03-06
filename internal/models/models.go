@@ -5,6 +5,11 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	TxTypePurchase = "purchase"
+	TxTypeDeposit  = "deposit"
+)
+
 type User struct {
 	gorm.Model
 	Username     string       `gorm:"type:varchar(50);not null;unique" json:"username"`
@@ -32,10 +37,10 @@ func (User) TableName() string {
 
 type Cart struct {
 	gorm.Model
-	UserID    uint        `gorm:"not null;unique" json:"user_id"`
-	User      *User       `json:"-"`
-	Items     []*CartItem `json:"items"`
-	TotalCost uint        `gorm:"type:BIGINT;not null;default:0" json:"total_cost"`
+	UserID    uint       `gorm:"not null;unique" json:"user_id"`
+	User      *User      `json:"-"`
+	Items     []CartItem `json:"items"`
+	TotalCost uint       `gorm:"type:BIGINT;not null;default:0" json:"total_cost"`
 }
 
 func (Cart) TableName() string {
@@ -55,6 +60,16 @@ func (CartItem) TableName() string {
 	return "carts_item"
 }
 
+type Purchases struct {
+	gorm.Model
+	UserID        uint       `gorm:"not null" json:"user_id"`
+	PurchasesList []CartItem `gorm:"many2many:purchases_items;" json:"purchases_list"`
+}
+
+func (Purchases) TableName() string {
+	return "purchases"
+}
+
 type Product struct {
 	gorm.Model
 	Name        string      `gorm:"type:varchar(50);not null" json:"name"`
@@ -69,13 +84,33 @@ func (Product) TableName() string {
 
 type BankAccount struct {
 	gorm.Model
-	Balance uint64 `gorm:"type:BIGINT;not null" json:"balance"`
-	UserID  uint   `gorm:"not null;unique" json:"user_id"`
-	User    *User  `json:"-"`
+	Balance      uint64         `gorm:"type:BIGINT;not null" json:"balance"`
+	UserID       uint           `gorm:"not null;unique" json:"user_id"`
+	User         *User          `json:"-"`
+	Transactions []*Transaction `json:"-"`
 }
 
 func (BankAccount) TableName() string {
 	return "bank_accounts"
+}
+
+type Transaction struct {
+	gorm.Model
+	BankAccountID uint         `gorm:"not null;index" json:"bank_account_id"`
+	BankAccount   *BankAccount `json:"-"`
+	Amount        int64        `gorm:"type:BIGINT;not null" json:"amount"`
+	Type          string       `gorm:"type:varchar(50);not null" json:"type"`
+	Description   string       `gorm:"type:varchar(100);not null" json:"description"`
+}
+
+func (Transaction) TableName() string {
+	return "transactions"
+}
+
+type TransactionSummary struct {
+	TotalTopUp int64
+	TotalDebit int64
+	Count      int64
 }
 
 type Donate struct {

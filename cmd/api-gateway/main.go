@@ -97,10 +97,13 @@ func (g *APIGateway) setRoutes() {
 	protected.HandleFunc("/donate/{category}/{username}/{moneySum}", g.proxyToBankService).Methods("POST")
 	protected.HandleFunc("/my-wallet", g.proxyToBankService).Methods("GET")
 	protected.HandleFunc("/top-up-wallet/{moneySum}", g.proxyToBankService).Methods("POST")
+	protected.HandleFunc("/transactions-history", g.proxyToBankService).Methods("POST")
 
 	protected.HandleFunc("/add-to-cart/{product-id:[0-9]+}/{quantity:[0-9]+}", g.proxyToOrderService).Methods("POST")
 	protected.HandleFunc("/get-all-from-cart", g.proxyToOrderService).Methods("GET")
 	protected.HandleFunc("/buy-merch", g.proxyToWebService).Methods("GET")
+	protected.HandleFunc("/purchase-cart", g.proxyToOrderService).Methods("POST")
+	protected.HandleFunc("/my-purchases", g.proxyToOrderService).Methods("GET")
 	protected.Use(middlewware.JWTAuth)
 }
 

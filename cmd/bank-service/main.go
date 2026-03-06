@@ -14,7 +14,14 @@ import (
 )
 
 func InitTemplates() *template.Template {
-	return template.Must(template.ParseGlob("web/templates/*.html"))
+	funcMap := template.FuncMap{
+		"multiply": func(a, b uint) uint {
+			return a * b
+		},
+	}
+	return template.Must(
+		template.New("").Funcs(funcMap).ParseGlob("web/templates/*.html"),
+	)
 }
 
 func main() {
@@ -30,6 +37,7 @@ func main() {
 	r.HandleFunc("/donate", handler.MakeHandlerDonatePage(tmpl)).Methods("GET")
 	r.HandleFunc("/donate/{category}/{username}/{moneySum}", handler.MakeHandlerDonate).Methods("POST")
 	r.HandleFunc("/top-up-wallet/{moneySum}", handler.MakeHandlerTopUpWallet).Methods("POST")
+	r.HandleFunc("/transactions-history", handler.MakeHandlerTransactionsHistory(tmpl)).Methods("POST")
 
 	log.Println("Server started on http://0.0.0.0:8080")
 	if err := http.ListenAndServe(":8080", r); err != nil {

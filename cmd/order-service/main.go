@@ -12,7 +12,14 @@ import (
 )
 
 func InitTemplates() *template.Template {
-	return template.Must(template.ParseGlob("web/templates/*.html"))
+	funcMap := template.FuncMap{
+		"multiply": func(a, b uint) uint {
+			return a * b
+		},
+	}
+	return template.Must(
+		template.New("").Funcs(funcMap).ParseGlob("web/templates/*.html"),
+	)
 }
 
 func main() {
@@ -29,6 +36,8 @@ func main() {
 
 	r.HandleFunc("/add-to-cart/{product-id:[0-9]+}/{quantity:[0-9]+}", handler.AddToCart).Methods("POST")
 	r.HandleFunc("/get-all-from-cart", handler.MakeGetAllCart(tmpl)).Methods("GET")
+	r.HandleFunc("/purchase-cart", handler.MakePurchaseCart(tmpl)).Methods("POST")
+	r.HandleFunc("/my-purchases", handler.MakeGetMyPurchases(tmpl)).Methods("GET")
 
 	log.Println("Server started on http://0.0.0.0:8080")
 	if err := http.ListenAndServe(":8080", r); err != nil {

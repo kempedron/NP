@@ -11,7 +11,14 @@ import (
 )
 
 func InitTemplates() *template.Template {
-	return template.Must(template.ParseGlob("web/templates/*.html"))
+	funcMap := template.FuncMap{
+		"multiply": func(a, b uint) uint {
+			return a * b
+		},
+	}
+	return template.Must(
+		template.New("").Funcs(funcMap).ParseGlob("web/templates/*.html"),
+	)
 }
 
 func main() {

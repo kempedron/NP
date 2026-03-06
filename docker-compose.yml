@@ -17,6 +17,8 @@ services:
       # - DB_USER=dbUser
       # - DB_PASSWORD=dbPassword
       # - DB_NAME=my_db
+    env_file:
+      - .env
     networks:
       - backend
     depends_on:

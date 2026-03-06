@@ -62,17 +62,30 @@ func AddToCart(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/get-all-from-cart", http.StatusSeeOther)
 }
 
+type ForRenderCart struct {
+	Items     []service.RespForGetProducts
+	TotalCost uint
+}
+
 func MakeGetAllCart(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID, err := middlewware.GetUserIDFromRequest(r)
 		if err != nil {
 			log.Printf("error get userID from midlleware: %s", err)
 		}
+		var totalCost uint
 		items, err := service.GettAllProductsFromCart(uint(userID))
 		if err != nil {
 			log.Printf("error get products for user %d cart: %v", userID, err)
 		}
-		err = tmpl.ExecuteTemplate(w, "cartItems.html", items)
+		for _, item := range items {
+			totalCost += item.Price * item.Quantity
+		}
+		data := ForRenderCart{
+			Items:     items,
+			TotalCost: totalCost,
+		}
+		err = tmpl.ExecuteTemplate(w, "cartItems.html", data)
 		if err != nil {
 			log.Printf("error rendering cartItems.html: %v", err)
 		}
@@ -87,4 +100,66 @@ func GetParamByUrl(name string, r *http.Request) int {
 		log.Printf("error convert id to int: %s", err)
 	}
 	return IdInt
+}
+
+func MakePurchaseCart(tmpl *template.Template) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID, err := middlewware.GetUserIDFromRequest(r)
+		if err != nil {
+			log.Printf("error get userID from midlleware: %s", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		err = service.PayCart(userID)
+		if err != nil {
+			log.Printf("error pay cart for user %d: %v", userID, err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		http.Redirect(w, r, "/my-purchases", http.StatusSeeOther)
+	}
+}
+
+type ForRenderPurchasesPage struct {
+	Purchases  []models.Purchases
+	OrderCount int
+	ItemCount  int
+	TotalSpent uint64
+}
+
+func MakeGetMyPurchases(tmpl *template.Template) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID, err := middlewware.GetUserIDFromRequest(r)
+		if err != nil {
+			log.Printf("error get userID from midlleware: %s", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		purchases, err := service.GetMyPurchases(userID)
+		if err != nil {
+			log.Printf("error get my purchases for user %d: %v", userID, err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		data := ForRenderPurchasesPage{
+			Purchases:  purchases,
+			OrderCount: len(purchases),
+		}
+
+		for _, p := range purchases {
+			for _, item := range p.PurchasesList {
+				data.ItemCount++
+				if item.Product != nil {
+					data.TotalSpent += uint64(item.Product.Price) * uint64(item.Quantity)
+				}
+			}
+		}
+
+		err = tmpl.ExecuteTemplate(w, "myPurchases.html", data)
+		if err != nil {
+			log.Printf("error rendering myPurchases.html: %v", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+		}
+	}
 }
