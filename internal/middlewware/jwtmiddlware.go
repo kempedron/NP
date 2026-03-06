@@ -3,6 +3,7 @@ package middlewware
 import (
 	"NP/internal/jwt"
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -53,15 +54,14 @@ func GetUserIDFromRequest(r *http.Request) (uint, error) {
 			return userID, nil
 		}
 	}
-
 	cookie, err := r.Cookie("jwt")
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("error get cookie from request: %w", err)
 	}
 	log.Printf("cookie from jwt: %s", cookie)
 	token, err := jwt.ValidateToken(cookie.Value)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("error get id from token: %w", err)
 	}
 	log.Printf("userID from jwt: %d", token.UserID)
 	return token.UserID, nil

@@ -1,0 +1,9 @@
+1) контейнеры запускаются не все
+2) доделать user-service (POSTы + redirect)
+3) доделать order-service
+
+1) добавление в корзину(инкремент при повторном запросе)
+2) фикс /get-all-from-cart (error convert id to int: strconv.Atoi: parsing "": invalid syntax)
+
+
+1) bank-history

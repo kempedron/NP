@@ -1,0 +1,8 @@
+error: failed to load manifest for workspace member `/home/kepr/NP/cmd/web-service/cmd/web-service`
+referenced by workspace at `/home/kepr/NP/cmd/web-service/Cargo.toml`
+
+Caused by:
+  failed to read `/home/kepr/NP/cmd/web-service/cmd/web-service/Cargo.toml`
+
+Caused by:
+  No such file or directory (os error 2)

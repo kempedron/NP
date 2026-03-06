@@ -1,306 +1,836 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Новостной портал - Вход</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3a0ca3;
-            --accent-color: #4cc9f0;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --gray-color: #6c757d;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Войти — Mauritius Wildlife</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+            :root {
+                --ocean-deep: #0a2e3d;
+                --ocean-mid: #0e5f74;
+                --ocean-light: #1a9baa;
+                --teal: #2bc4c4;
+                --aqua: #7ee8e8;
+                --foam: #e8f7f8;
+                --warm-white: #fdfaf5;
+                --coral: #e07a5f;
+                --text-dark: #0f2027;
+                --text-mid: #2a5260;
+                --text-light: #6b9dab;
+                --ff-serif: "Cormorant Garamond", Georgia, serif;
+                --ff-sans: "DM Sans", sans-serif;
+            }
 
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4eaf1 100%);
-            color: var(--dark-color);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+            html {
+                scroll-behavior: smooth;
+            }
 
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-        }
+            body {
+                font-family: var(--ff-sans);
+                background: var(--ocean-deep);
+                color: var(--text-dark);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                overflow-x: hidden;
+            }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-        }
+            /* ── Animated background ── */
+            .page-bg {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                background:
+                    radial-gradient(
+                        ellipse 80% 60% at 20% 50%,
+                        #0e4f6a 0%,
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        ellipse 60% 80% at 80% 30%,
+                        #0a7a80 0%,
+                        transparent 55%
+                    ),
+                    radial-gradient(
+                        ellipse 50% 50% at 55% 80%,
+                        #0d3545 0%,
+                        transparent 50%
+                    ),
+                    linear-gradient(
+                        160deg,
+                        #062030 0%,
+                        #0e4c62 40%,
+                        #0a7870 100%
+                    );
+                animation: bgShimmer 14s ease-in-out infinite alternate;
+            }
+            @keyframes bgShimmer {
+                0% {
+                    filter: brightness(1) hue-rotate(0deg);
+                }
+                50% {
+                    filter: brightness(1.06) hue-rotate(3deg);
+                }
+                100% {
+                    filter: brightness(0.96) hue-rotate(-3deg);
+                }
+            }
 
-        .logo {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+            /* Caustic blobs */
+            .caustic {
+                position: fixed;
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle,
+                    rgba(43, 196, 196, 0.15) 0%,
+                    transparent 70%
+                );
+                animation: floatBlob linear infinite;
+                pointer-events: none;
+                z-index: 0;
+            }
+            .caustic:nth-child(1) {
+                width: 500px;
+                height: 500px;
+                top: -15%;
+                left: -10%;
+                animation-duration: 20s;
+            }
+            .caustic:nth-child(2) {
+                width: 350px;
+                height: 350px;
+                bottom: 10%;
+                right: -5%;
+                animation-duration: 24s;
+                animation-delay: -9s;
+            }
+            @keyframes floatBlob {
+                0%,
+                100% {
+                    transform: translateY(0) scale(1);
+                    opacity: 0.5;
+                }
+                50% {
+                    transform: translateY(-28px) scale(1.04);
+                    opacity: 0.9;
+                }
+            }
 
-        .logo i {
-            font-size: 40px;
-        }
+            /* ── Header ── */
+            header {
+                position: relative;
+                z-index: 10;
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                align-items: center;
+                padding: 1.1rem 4vw;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            }
 
-        .login-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 40px;
-            text-align: center;
-            transition: var(--transition);
-            max-width: 450px;
-            margin: 0 auto;
-        }
-
-        .login-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .login-icon {
-            font-size: 54px;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(67, 97, 238, 0.1);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-        }
-
-        .login-card h2 {
-            font-size: 24px;
-            margin-bottom: 5px;
-            color: var(--dark-color);
-        }
-
-        .login-card p {
-            color: var(--gray-color);
-            margin-bottom: 25px;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
-        .form-group label {
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-
-        .form-input {
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: var(--border-radius);
-            outline: none;
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        .form-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        .login-button {
-            padding: 15px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 500;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        .login-button:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-
-        .register-link {
-            margin-top: 20px;
-            color: var(--gray-color);
-        }
-
-        .register-link a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-        }
-
-        .nav-btn:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            padding: 20px;
-            color: var(--gray-color);
-            font-size: 14px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            width: 100%;
-        }
-
-        @media (max-width: 768px) {
             .logo {
-                font-size: 28px;
+                font-family: var(--ff-serif);
+                font-size: 1.5rem;
+                font-weight: 300;
+                color: #fff;
+                letter-spacing: 0.04em;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
             }
-            
-            .logo i {
-                font-size: 32px;
+            .logo span.accent {
+                color: var(--aqua);
+                font-style: italic;
             }
-            
-            .login-card {
-                padding: 20px;
+
+            nav.nav-center {
+                display: flex;
+                align-items: center;
+                gap: 0.2rem;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 50px;
+                padding: 0.3rem 0.4rem;
             }
-            
-            .login-icon {
-                font-size: 40px;
-                width: 60px;
-                height: 60px;
+            nav.nav-center a {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 400;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.7);
+                padding: 0.45rem 1rem;
+                border-radius: 50px;
+                transition:
+                    color 0.2s,
+                    background 0.2s;
+                white-space: nowrap;
             }
-            
-            .login-card h2 {
-                font-size: 20px;
+            nav.nav-center a:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.1);
             }
-            
-            .nav-buttons {
+            nav.nav-center a.donate-pill {
+                background: var(--teal);
+                color: var(--ocean-deep);
+                font-weight: 500;
+                padding: 0.45rem 1.2rem;
+            }
+            nav.nav-center a.donate-pill:hover {
+                background: var(--aqua);
+            }
+
+            .nav-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                justify-content: flex-end;
+            }
+            .nav-icon-btn {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                background: rgba(255, 255, 255, 0.06);
+                color: rgba(255, 255, 255, 0.75);
+                text-decoration: none;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s,
+                    background 0.2s;
+            }
+            .nav-icon-btn:hover {
+                color: #fff;
+                border-color: var(--teal);
+                background: rgba(43, 196, 196, 0.12);
+            }
+            .nav-icon-btn::after {
+                content: attr(data-tip);
+                position: absolute;
+                top: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(10, 46, 61, 0.95);
+                color: #fff;
+                font-size: 0.7rem;
+                font-family: var(--ff-sans);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                white-space: nowrap;
+                padding: 0.3rem 0.65rem;
+                border-radius: 6px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.15s;
+            }
+            .nav-icon-btn:hover::after {
+                opacity: 1;
+            }
+            .nav-divider {
+                width: 1px;
+                height: 22px;
+                background: rgba(255, 255, 255, 0.18);
+                margin: 0 0.25rem;
+            }
+            .nav-btn-ghost {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 400;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.8);
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                border: 1px solid transparent;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s;
+                white-space: nowrap;
+            }
+            .nav-btn-ghost:hover {
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.25);
+            }
+            .nav-btn-ghost.active {
+                color: var(--aqua);
+                border-color: rgba(126, 232, 232, 0.4);
+            }
+            .nav-btn-register {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 500;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: var(--ocean-deep);
+                background: #fff;
+                padding: 0.5rem 1.1rem;
+                border-radius: 50px;
+                border: 1px solid #fff;
+                transition:
+                    background 0.2s,
+                    color 0.2s,
+                    border-color 0.2s;
+                white-space: nowrap;
+            }
+            .nav-btn-register:hover {
+                background: var(--aqua);
+                border-color: var(--aqua);
+            }
+
+            .burger {
+                display: none;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                padding: 4px;
+                background: none;
+                border: none;
+                justify-self: end;
+            }
+            .burger span {
+                display: block;
+                width: 24px;
+                height: 2px;
+                background: #fff;
+                border-radius: 2px;
+            }
+
+            .mobile-nav {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 46, 61, 0.97);
+                z-index: 99;
                 flex-direction: column;
                 align-items: center;
-            }
-            
-            .nav-btn {
-                width: 100%;
                 justify-content: center;
+                gap: 1.4rem;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
+            .mobile-nav.open {
+                display: flex;
+            }
+            .mobile-nav a {
+                font-family: var(--ff-serif);
+                font-size: 1.9rem;
+                font-weight: 300;
+                font-style: italic;
+                color: #fff;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .mobile-nav a:hover {
+                color: var(--teal);
+            }
+            .mobile-nav-sep {
+                width: 40px;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.15);
+                margin: 0.3rem 0;
+            }
+            .mobile-nav-close {
+                position: absolute;
+                top: 1.4rem;
+                right: 5vw;
+                font-size: 1.8rem;
+                color: #fff;
+                cursor: pointer;
+                background: none;
+                border: none;
+                line-height: 1;
+            }
+
+            /* ── Main ── */
+            main {
+                position: relative;
+                z-index: 1;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4rem 6vw;
+            }
+
+            /* ── Card ── */
+            .auth-card {
+                width: 100%;
+                max-width: 440px;
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 24px;
+                padding: 2.8rem 2.6rem 2.4rem;
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                box-shadow: 0 32px 80px rgba(0, 0, 0, 0.35);
+                opacity: 0;
+                transform: translateY(28px);
+                animation: fadeUp 0.8s 0.2s forwards;
+            }
+            @keyframes fadeUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Icon */
+            .auth-icon {
+                width: 58px;
+                height: 58px;
+                border-radius: 50%;
+                background: linear-gradient(
+                    135deg,
+                    rgba(43, 196, 196, 0.25),
+                    rgba(126, 232, 232, 0.1)
+                );
+                border: 1px solid rgba(43, 196, 196, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.6rem;
+            }
+            .auth-icon svg {
+                color: var(--teal);
+            }
+
+            /* Titles */
+            .auth-eyebrow {
+                font-size: 0.68rem;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--teal);
+                font-weight: 500;
+                text-align: center;
+                margin-bottom: 0.4rem;
+            }
+            .auth-title {
+                font-family: var(--ff-serif);
+                font-size: 2.4rem;
+                font-weight: 300;
+                color: #fff;
+                text-align: center;
+                line-height: 1.12;
+                margin-bottom: 0.3rem;
+            }
+            .auth-title em {
+                font-style: italic;
+                color: var(--aqua);
+            }
+            .auth-sub {
+                font-size: 0.85rem;
+                color: rgba(255, 255, 255, 0.45);
+                font-weight: 300;
+                text-align: center;
+                margin-bottom: 2rem;
+                line-height: 1.5;
+            }
+
+            /* Form */
+            .auth-form {
+                display: flex;
+                flex-direction: column;
+                gap: 1.1rem;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.4rem;
+            }
+
+            .form-group label {
+                font-size: 0.75rem;
+                font-weight: 500;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: rgba(255, 255, 255, 0.55);
+            }
+
+            .form-input {
+                font-family: var(--ff-sans);
+                font-size: 0.95rem;
+                font-weight: 300;
+                color: #fff;
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                border-radius: 12px;
+                padding: 0.85rem 1.1rem;
+                outline: none;
+                transition:
+                    border-color 0.2s,
+                    background 0.2s,
+                    box-shadow 0.2s;
+                width: 100%;
+            }
+            .form-input::placeholder {
+                color: rgba(255, 255, 255, 0.25);
+            }
+            .form-input:focus {
+                border-color: var(--teal);
+                background: rgba(43, 196, 196, 0.07);
+                box-shadow: 0 0 0 3px rgba(43, 196, 196, 0.12);
+            }
+
+            /* Submit */
+            .auth-submit {
+                margin-top: 0.6rem;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.6rem;
+                font-family: var(--ff-sans);
+                font-size: 0.88rem;
+                font-weight: 500;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--ocean-deep);
+                background: var(--teal);
+                border: none;
+                padding: 0.95rem;
+                border-radius: 50px;
+                cursor: pointer;
+                transition:
+                    background 0.25s,
+                    transform 0.2s,
+                    box-shadow 0.25s;
+            }
+            .auth-submit:hover {
+                background: var(--aqua);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 28px rgba(43, 196, 196, 0.35);
+            }
+
+            /* Switch link */
+            .auth-switch {
+                margin-top: 1.4rem;
+                text-align: center;
+                font-size: 0.85rem;
+                color: rgba(255, 255, 255, 0.4);
+                font-weight: 300;
+            }
+            .auth-switch a {
+                color: var(--teal);
+                text-decoration: none;
+                font-weight: 500;
+                transition: color 0.2s;
+            }
+            .auth-switch a:hover {
+                color: var(--aqua);
+            }
+
+            /* Divider */
+            .auth-divider {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                margin: 1.6rem 0 0;
+            }
+            .auth-divider::before,
+            .auth-divider::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .auth-divider span {
+                font-size: 0.72rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: rgba(255, 255, 255, 0.25);
+                white-space: nowrap;
+            }
+
+            /* Nav links below card */
+            .auth-nav {
+                display: flex;
+                justify-content: center;
+                gap: 0.6rem;
+                flex-wrap: wrap;
+            }
+            .auth-nav a {
+                font-family: var(--ff-sans);
+                font-size: 0.78rem;
+                font-weight: 400;
+                letter-spacing: 0.07em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.5);
+                padding: 0.45rem 1rem;
+                border-radius: 50px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                transition:
+                    color 0.2s,
+                    border-color 0.2s,
+                    background 0.2s;
+                white-space: nowrap;
+            }
+            .auth-nav a:hover {
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.3);
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            /* ── Footer ── */
+            footer {
+                position: relative;
+                z-index: 1;
+                border-top: 1px solid rgba(255, 255, 255, 0.07);
+                padding: 1.6rem 6vw;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+                font-size: 0.78rem;
+                font-weight: 300;
+                color: rgba(255, 255, 255, 0.25);
+            }
+            .footer-logo {
+                font-family: var(--ff-serif);
+                font-size: 1.1rem;
+                color: rgba(255, 255, 255, 0.5);
+                font-style: italic;
+            }
+
+            /* ── Responsive ── */
+            @media (max-width: 900px) {
+                nav.nav-center,
+                .nav-actions {
+                    display: none;
+                }
+                .burger {
+                    display: flex;
+                }
+                header {
+                    grid-template-columns: 1fr auto;
+                }
+                footer {
+                    flex-direction: column;
+                    text-align: center;
+                }
+            }
+            @media (max-width: 480px) {
+                .auth-card {
+                    padding: 2rem 1.5rem 1.8rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-bg"></div>
+        <div class="caustic"></div>
+        <div class="caustic"></div>
+
+        <!-- HEADER -->
         <header>
-            <div class="logo">
-                <i class="fas fa-newspaper"></i>
-                <span>Новостной портал</span>
+            <a class="logo" href="/"
+                >🌊 Mauritius <span class="accent">Wildlife</span></a
+            >
+
+            <nav class="nav-center">
+                <a href="/about-us">О проекте</a>
+                <a href="/buy-merch">Купить мерч</a>
+                <a href="/donate" class="donate-pill">Пожертвовать</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a
+                    href="/get-all-from-cart"
+                    class="nav-icon-btn"
+                    data-tip="Корзина"
+                    aria-label="Корзина"
+                >
+                    <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path
+                            d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                        />
+                    </svg>
+                </a>
+                <a
+                    href="/my-wallet"
+                    class="nav-icon-btn"
+                    data-tip="Кошелёк"
+                    aria-label="Кошелёк"
+                >
+                    <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <rect x="1" y="4" width="22" height="16" rx="2" />
+                        <path d="M16 12h.01" />
+                    </svg>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="/login" class="nav-btn-ghost active">Войти</a>
+                <a href="/register" class="nav-btn-register">Регистрация</a>
             </div>
+
+            <button class="burger" id="burgerBtn" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
         </header>
 
-        <div class="login-card">
-            <div class="login-icon">
-                <i class="fas fa-user-lock"></i>
-            </div>
-            <h2>Вход в систему</h2>
-            <p>Введите свои учетные данные для доступа к порталу</p>
-            
-            <form class="login-form" action="/login" method="post">
-                <div class="form-group">
-                    <label for="username">Имя пользователя</label>
-                    <input type="text" id="username" name="username" class="form-input" placeholder="Введите имя пользователя" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Пароль</label>
-                    <input type="password" id="password" name="password" class="form-input" placeholder="Введите пароль" required>
-                </div>
-                
-                <button type="submit" class="login-button">
-                    <i class="fas fa-sign-in-alt"></i> Войти
-                </button>
-            </form>
-            
-            <div class="register-link">
-                Нет аккаунта? <a href="/register">Зарегистрируйтесь</a>
-            </div>
+        <div class="mobile-nav" id="mobileNav">
+            <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+            <a href="/about-us">О проекте</a>
+            <a href="/buy-merch">Купить мерч</a>
+            <a href="/donate">Пожертвовать</a>
+            <div class="mobile-nav-sep"></div>
+            <a href="/get-all-from-cart">Корзина</a>
+            <a href="/my-wallet">Кошелёк</a>
+            <div class="mobile-nav-sep"></div>
+            <a href="/login">Войти</a>
+            <a href="/register">Регистрация</a>
         </div>
 
-        <div class="nav-buttons">
-            <a href="/" class="nav-btn">
-                <i class="fas fa-home"></i> Главная
-            </a>
-            <a href="/articles" class="nav-btn">
-                <i class="fas fa-list"></i> Все статьи
-            </a>
-            <a href="/search" class="nav-btn">
-                <i class="fas fa-search"></i> Поиск
-            </a>
-        </div>
+        <!-- MAIN -->
+        <main>
+            <div
+                style="
+                    width: 100%;
+                    max-width: 440px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.4rem;
+                "
+            >
+                <div class="auth-card">
+                    <div class="auth-icon">
+                        <svg
+                            width="26"
+                            height="26"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path
+                                d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"
+                            />
+                            <polyline points="10 17 15 12 10 7" />
+                            <line x1="15" y1="12" x2="3" y2="12" />
+                        </svg>
+                    </div>
 
+                    <p class="auth-eyebrow">Личный кабинет</p>
+                    <h1 class="auth-title">Добро <em>пожаловать</em></h1>
+                    <p class="auth-sub">Войдите, чтобы продолжить</p>
+
+                    <form class="auth-form" action="/login" method="post">
+                        <div class="form-group">
+                            <label for="username">Имя пользователя</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="form-input"
+                                placeholder="Введите имя пользователя"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Пароль</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-input"
+                                placeholder="Введите пароль"
+                                required
+                            />
+                        </div>
+                        <button type="submit" class="auth-submit">
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"
+                                />
+                                <polyline points="10 17 15 12 10 7" />
+                                <line x1="15" y1="12" x2="3" y2="12" />
+                            </svg>
+                            Войти
+                        </button>
+                    </form>
+
+                    <p class="auth-switch">
+                        Нет аккаунта? <a href="/register">Зарегистрируйтесь</a>
+                    </p>
+
+                    <div class="auth-divider"><span>или перейдите</span></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- FOOTER -->
         <footer>
-            <p>© 2023 Новостной портал. Все права защищены.</p>
+            <span class="footer-logo">🌊 Mauritius Wildlife</span>
+            <span>© 2025 Mauritius Wildlife. Все права защищены.</span>
         </footer>
-    </div>
-</body>
+
+        <script>
+            const burgerBtn = document.getElementById("burgerBtn");
+            const mobileNav = document.getElementById("mobileNav");
+            const mobileClose = document.getElementById("mobileNavClose");
+            burgerBtn.addEventListener("click", () =>
+                mobileNav.classList.add("open"),
+            );
+            mobileClose.addEventListener("click", () =>
+                mobileNav.classList.remove("open"),
+            );
+            mobileNav
+                .querySelectorAll("a")
+                .forEach((a) =>
+                    a.addEventListener("click", () =>
+                        mobileNav.classList.remove("open"),
+                    ),
+                );
+        </script>
+    </body>
 </html>

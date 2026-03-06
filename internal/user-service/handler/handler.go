@@ -6,6 +6,7 @@ import (
 	"NP/internal/models"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -29,6 +30,7 @@ func MakeHandlerRegisterPage(tmpl *template.Template) http.HandlerFunc {
 
 func MakeHandlerLogin(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("login func start")
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
@@ -69,13 +71,33 @@ func MakeHandlerLogin(tmpl *template.Template) http.HandlerFunc {
 			return
 		}
 
-		cookie := new(http.Cookie)
-		cookie.Name = "jwt"
-		cookie.Value = token
-		cookie.Expires = time.Now().Add(24 * time.Hour)
-		cookie.Path = "/"
-		cookie.HttpOnly = true
-		http.SetCookie(w, cookie)
+		if err := database.InitCart(user.ID); err != nil {
+			log.Fatalf("error init cart(when user login) for user-service: %s", err)
+		}
+
+		if err := database.InitBankAccount(user.ID); err != nil {
+			log.Fatalf("error init bank account(when user login) for user-service: %s", err)
+		}
+
+		fmt.Print("successfully set cookie after login")
+		http.SetCookie(w, &http.Cookie{
+			Name:     "jwt",
+			Value:    token,
+			Expires:  time.Now().Add(24 * time.Hour),
+			Path:     "/",
+			HttpOnly: true,
+		})
+
+		fmt.Print("successfully set cookie2 after login")
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "logged_in",
+			Value:    "true",
+			HttpOnly: false,
+			Path:     "/",
+		})
+		fmt.Print("redirecting")
+
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 
 	}
@@ -83,6 +105,8 @@ func MakeHandlerLogin(tmpl *template.Template) http.HandlerFunc {
 
 func MakeHandlerRegister(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("start reg func")
+
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
@@ -126,6 +150,8 @@ func MakeHandlerRegister(tmpl *template.Template) http.HandlerFunc {
 			Username:     username,
 			PasswordHash: string(hashedPassword),
 		}
+		fmt.Println(2)
+
 		if err := database.DB.Create(&newUser).Error; err != nil {
 			log.Printf("error saving user to db: %v", err)
 			w.Header().Set("Content-Type", "application/json")
@@ -140,6 +166,13 @@ func MakeHandlerRegister(tmpl *template.Template) http.HandlerFunc {
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
+
+		if err := database.InitCart(user.ID); err != nil {
+			log.Fatalf("error init cart(when user login) for user-service: %s", err)
+		}
+
+		fmt.Println(3)
+
 		http.SetCookie(w, &http.Cookie{
 			Name:     "jwt",
 			Value:    token,
@@ -147,6 +180,14 @@ func MakeHandlerRegister(tmpl *template.Template) http.HandlerFunc {
 			Path:     "/",
 			HttpOnly: true,
 		})
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "logged_in",
+			Value:    "true",
+			HttpOnly: true,
+			Path:     "/",
+		})
+		println("end reg func")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

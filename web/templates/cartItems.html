@@ -1,13 +1,1094 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>CartID: {.CartID}</h1>
-    <h2>ProductID: {.ProductID}</h2>
-    <h3>Quantity: {.Quantity}</h3>
-</body>
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Корзина — Mauritius Wildlife</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            /* ================================================
+   RESET & VARIABLES
+   ================================================ */
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                --ocean-deep: #0a2e3d;
+                --ocean-mid: #0e5f74;
+                --ocean-light: #1a9baa;
+                --teal: #2bc4c4;
+                --aqua: #7ee8e8;
+                --foam: #e8f7f8;
+                --sand: #f5e9d3;
+                --warm-white: #fdfaf5;
+                --coral: #e07a5f;
+                --text-dark: #0f2027;
+                --text-mid: #2a5260;
+                --text-light: #6b9dab;
+                --ff-serif: "Cormorant Garamond", Georgia, serif;
+                --ff-sans: "DM Sans", sans-serif;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: var(--ff-sans);
+                background: var(--warm-white);
+                color: var(--text-dark);
+                overflow-x: hidden;
+                min-height: 100vh;
+            }
+
+            /* ================================================
+   HEADER
+   ================================================ */
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                align-items: center;
+                padding: 1rem 4vw;
+                background: rgba(10, 46, 61, 0.92);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                box-shadow:
+                    0 1px 0 rgba(255, 255, 255, 0.06),
+                    0 4px 32px rgba(0, 0, 0, 0.2);
+            }
+
+            .logo {
+                font-family: var(--ff-serif);
+                font-size: 1.5rem;
+                font-weight: 300;
+                color: #fff;
+                letter-spacing: 0.04em;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+            }
+            .logo span.accent {
+                color: var(--aqua);
+                font-style: italic;
+            }
+
+            nav.nav-center {
+                display: flex;
+                align-items: center;
+                gap: 0.2rem;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 50px;
+                padding: 0.3rem 0.4rem;
+            }
+            nav.nav-center a {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 400;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.75);
+                padding: 0.45rem 1rem;
+                border-radius: 50px;
+                transition:
+                    color 0.2s,
+                    background 0.2s;
+                white-space: nowrap;
+            }
+            nav.nav-center a:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.1);
+            }
+            nav.nav-center a.donate-pill {
+                background: var(--teal);
+                color: var(--ocean-deep);
+                font-weight: 500;
+                padding: 0.45rem 1.2rem;
+            }
+            nav.nav-center a.donate-pill:hover {
+                background: var(--aqua);
+            }
+
+            .nav-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                justify-content: flex-end;
+            }
+            .nav-icon-btn {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                background: rgba(255, 255, 255, 0.06);
+                color: rgba(255, 255, 255, 0.75);
+                text-decoration: none;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s,
+                    background 0.2s;
+            }
+            .nav-icon-btn:hover {
+                color: #fff;
+                border-color: var(--teal);
+                background: rgba(43, 196, 196, 0.12);
+            }
+            .nav-icon-btn.active {
+                border-color: var(--teal);
+                background: rgba(43, 196, 196, 0.18);
+                color: var(--aqua);
+            }
+            .nav-icon-btn::after {
+                content: attr(data-tip);
+                position: absolute;
+                top: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(10, 46, 61, 0.95);
+                color: #fff;
+                font-size: 0.7rem;
+                font-family: var(--ff-sans);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                white-space: nowrap;
+                padding: 0.3rem 0.65rem;
+                border-radius: 6px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.15s;
+            }
+            .nav-icon-btn:hover::after {
+                opacity: 1;
+            }
+            .nav-divider {
+                width: 1px;
+                height: 22px;
+                background: rgba(255, 255, 255, 0.18);
+                margin: 0 0.25rem;
+            }
+            .nav-btn-ghost {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 400;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.8);
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                border: 1px solid transparent;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s;
+                white-space: nowrap;
+            }
+            .nav-btn-ghost:hover {
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.25);
+            }
+            .nav-btn-register {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 500;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: var(--ocean-deep);
+                background: #fff;
+                padding: 0.5rem 1.1rem;
+                border-radius: 50px;
+                border: 1px solid #fff;
+                transition:
+                    background 0.2s,
+                    color 0.2s,
+                    border-color 0.2s;
+                white-space: nowrap;
+            }
+            .nav-btn-register:hover {
+                background: var(--aqua);
+                border-color: var(--aqua);
+            }
+
+            .burger {
+                display: none;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                padding: 4px;
+                background: none;
+                border: none;
+                justify-self: end;
+            }
+            .burger span {
+                display: block;
+                width: 24px;
+                height: 2px;
+                background: #fff;
+                border-radius: 2px;
+            }
+
+            .mobile-nav {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 46, 61, 0.97);
+                z-index: 99;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 1.4rem;
+            }
+            .mobile-nav.open {
+                display: flex;
+            }
+            .mobile-nav a {
+                font-family: var(--ff-serif);
+                font-size: 1.9rem;
+                font-weight: 300;
+                font-style: italic;
+                color: #fff;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .mobile-nav a:hover {
+                color: var(--teal);
+            }
+            .mobile-nav-sep {
+                width: 40px;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.15);
+                margin: 0.3rem 0;
+            }
+            .mobile-nav-close {
+                position: absolute;
+                top: 1.4rem;
+                right: 5vw;
+                font-size: 1.8rem;
+                color: #fff;
+                cursor: pointer;
+                background: none;
+                border: none;
+                line-height: 1;
+            }
+
+            /* ================================================
+   PAGE BG
+   ================================================ */
+            .page-bg {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                background:
+                    radial-gradient(
+                        ellipse 60% 40% at 5% 15%,
+                        rgba(14, 95, 116, 0.14) 0%,
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        ellipse 40% 50% at 95% 85%,
+                        rgba(43, 196, 196, 0.08) 0%,
+                        transparent 55%
+                    ),
+                    var(--warm-white);
+                pointer-events: none;
+            }
+
+            /* ================================================
+   MAIN LAYOUT
+   ================================================ */
+            .page-content {
+                position: relative;
+                z-index: 1;
+                padding: 7rem 6vw 5rem;
+                max-width: 900px;
+                margin: 0 auto;
+            }
+
+            /* ── Page header ── */
+            .page-header {
+                margin-bottom: 3rem;
+                opacity: 0;
+                transform: translateY(24px);
+                animation: fadeUp 0.7s 0.1s forwards;
+            }
+            .page-label {
+                font-size: 0.7rem;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ocean-light);
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+            }
+            .page-title {
+                font-family: var(--ff-serif);
+                font-size: clamp(2.4rem, 5vw, 3.6rem);
+                font-weight: 300;
+                color: var(--ocean-deep);
+                line-height: 1.1;
+            }
+            .page-title em {
+                font-style: italic;
+                color: var(--ocean-light);
+            }
+
+            /* ================================================
+   CART ITEMS
+   ================================================ */
+            .cart-list {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .cart-item {
+                background: #fff;
+                border-radius: 18px;
+                padding: 1.6rem 2rem;
+                box-shadow: 0 4px 20px rgba(10, 46, 61, 0.06);
+                display: grid;
+                grid-template-columns: 1fr auto;
+                align-items: center;
+                gap: 1.5rem;
+                transition:
+                    transform 0.3s cubic-bezier(0.22, 0.68, 0, 1.2),
+                    box-shadow 0.3s;
+                opacity: 0;
+                transform: translateY(30px);
+                animation: fadeUp 0.6s forwards;
+            }
+            .cart-item:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 40px rgba(10, 46, 61, 0.11);
+            }
+
+            .item-info {
+                display: flex;
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+
+            .item-name {
+                font-family: var(--ff-serif);
+                font-size: 1.5rem;
+                font-weight: 400;
+                color: var(--ocean-deep);
+                line-height: 1.2;
+            }
+
+            .item-desc {
+                font-size: 0.88rem;
+                color: var(--text-light);
+                font-weight: 300;
+                line-height: 1.55;
+            }
+
+            .item-price {
+                font-family: var(--ff-serif);
+                font-size: 1.4rem;
+                font-weight: 400;
+                font-style: italic;
+                color: var(--coral);
+                margin-top: 0.2rem;
+            }
+
+            .item-right {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 0.8rem;
+                flex-shrink: 0;
+            }
+
+            .item-quantity {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: var(--foam);
+                border: 1px solid rgba(43, 196, 196, 0.25);
+                padding: 0.4rem 1rem;
+                border-radius: 50px;
+                font-size: 0.82rem;
+                font-weight: 500;
+                color: var(--ocean-mid);
+                letter-spacing: 0.04em;
+                white-space: nowrap;
+            }
+            .item-quantity svg {
+                opacity: 0.6;
+            }
+
+            .item-total {
+                font-size: 0.72rem;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--text-light);
+                font-weight: 400;
+            }
+
+            /* ── Divider + stagger animations ── */
+            .cart-item:nth-child(1) {
+                animation-delay: 0.15s;
+            }
+            .cart-item:nth-child(2) {
+                animation-delay: 0.23s;
+            }
+            .cart-item:nth-child(3) {
+                animation-delay: 0.31s;
+            }
+            .cart-item:nth-child(4) {
+                animation-delay: 0.39s;
+            }
+            .cart-item:nth-child(5) {
+                animation-delay: 0.47s;
+            }
+            .cart-item:nth-child(n + 6) {
+                animation-delay: 0.52s;
+            }
+
+            /* ================================================
+   EMPTY STATE
+   ================================================ */
+            .empty-cart {
+                text-align: center;
+                padding: 5rem 2rem;
+                background: #fff;
+                border-radius: 24px;
+                box-shadow: 0 4px 20px rgba(10, 46, 61, 0.06);
+                opacity: 0;
+                animation: fadeUp 0.7s 0.2s forwards;
+            }
+            .empty-icon {
+                width: 72px;
+                height: 72px;
+                background: var(--foam);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.4rem;
+                font-size: 1.8rem;
+            }
+            .empty-cart h2 {
+                font-family: var(--ff-serif);
+                font-size: 2rem;
+                font-weight: 300;
+                color: var(--ocean-deep);
+                margin-bottom: 0.5rem;
+            }
+            .empty-cart p {
+                font-size: 0.95rem;
+                color: var(--text-light);
+                font-weight: 300;
+                line-height: 1.65;
+                max-width: 340px;
+                margin: 0 auto 2rem;
+            }
+            .btn-shop {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.55rem;
+                font-family: var(--ff-sans);
+                font-size: 0.88rem;
+                font-weight: 500;
+                letter-spacing: 0.07em;
+                text-transform: uppercase;
+                color: var(--ocean-deep);
+                background: var(--teal);
+                padding: 0.9rem 2rem;
+                border-radius: 50px;
+                text-decoration: none;
+                transition:
+                    background 0.25s,
+                    transform 0.2s,
+                    box-shadow 0.25s;
+            }
+            .btn-shop:hover {
+                background: var(--aqua);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 28px rgba(43, 196, 196, 0.35);
+            }
+
+            /* ================================================
+   FOOTER
+   ================================================ */
+            footer {
+                position: relative;
+                z-index: 1;
+                background: var(--ocean-deep);
+                color: rgba(255, 255, 255, 0.45);
+                padding: 2.5rem 6vw;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1rem;
+                font-size: 0.82rem;
+                font-weight: 300;
+            }
+            .footer-logo {
+                font-family: var(--ff-serif);
+                font-size: 1.2rem;
+                color: rgba(255, 255, 255, 0.65);
+                font-style: italic;
+            }
+            .footer-socials {
+                display: flex;
+                gap: 1.2rem;
+                font-size: 1.15rem;
+            }
+            .footer-socials span {
+                cursor: pointer;
+                opacity: 0.5;
+                transition: opacity 0.2s;
+            }
+            .footer-socials span:hover {
+                opacity: 1;
+            }
+
+            /* ================================================
+   ANIMATION
+   ================================================ */
+            @keyframes fadeUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* ================================================
+   RESPONSIVE
+   ================================================ */
+            @media (max-width: 900px) {
+                nav.nav-center,
+                .nav-actions {
+                    display: none;
+                }
+                .burger {
+                    display: flex;
+                }
+                header {
+                    grid-template-columns: 1fr auto;
+                }
+                footer {
+                    flex-direction: column;
+                    text-align: center;
+                }
+            }
+            @media (max-width: 600px) {
+                .cart-item {
+                    grid-template-columns: 1fr;
+                }
+                .item-right {
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+            }
+
+            /* ================================================
+   HEADER
+   ================================================ */
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                align-items: center;
+                padding: 1rem 4vw;
+                transition:
+                    background 0.4s,
+                    backdrop-filter 0.4s,
+                    box-shadow 0.4s;
+            }
+            header.scrolled {
+                background: rgba(10, 46, 61, 0.9);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                box-shadow:
+                    0 1px 0 rgba(255, 255, 255, 0.06),
+                    0 4px 32px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Лого */
+            .logo {
+                font-family: var(--ff-serif);
+                font-size: 1.5rem;
+                font-weight: 300;
+                color: #fff;
+                letter-spacing: 0.04em;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+            }
+            .logo span.accent {
+                color: var(--aqua);
+                font-style: italic;
+            }
+
+            /* Центральная навигация */
+            nav.nav-center {
+                display: flex;
+                align-items: center;
+                gap: 0.2rem;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 50px;
+                padding: 0.3rem 0.4rem;
+            }
+            nav.nav-center a {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 400;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.75);
+                padding: 0.45rem 1rem;
+                border-radius: 50px;
+                transition:
+                    color 0.2s,
+                    background 0.2s;
+                white-space: nowrap;
+            }
+            nav.nav-center a:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.1);
+            }
+            nav.nav-center a.donate-pill {
+                background: var(--teal);
+                color: var(--ocean-deep);
+                font-weight: 500;
+                padding: 0.45rem 1.2rem;
+            }
+            nav.nav-center a.donate-pill:hover {
+                background: var(--aqua);
+            }
+
+            /* Правые действия */
+            .nav-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                justify-content: flex-end;
+            }
+
+            /* Иконки-кружки (корзина, кошелёк) */
+            .nav-icon-btn {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                background: rgba(255, 255, 255, 0.06);
+                color: rgba(255, 255, 255, 0.75);
+                text-decoration: none;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s,
+                    background 0.2s;
+                cursor: pointer;
+            }
+            .nav-icon-btn:hover {
+                color: #fff;
+                border-color: var(--teal);
+                background: rgba(43, 196, 196, 0.12);
+            }
+            /* Тултип */
+            .nav-icon-btn::after {
+                content: attr(data-tip);
+                position: absolute;
+                top: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(10, 46, 61, 0.95);
+                color: #fff;
+                font-size: 0.7rem;
+                font-family: var(--ff-sans);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                white-space: nowrap;
+                padding: 0.3rem 0.65rem;
+                border-radius: 6px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.15s;
+            }
+            .nav-icon-btn:hover::after {
+                opacity: 1;
+            }
+
+            /* Разделитель */
+            .nav-divider {
+                width: 1px;
+                height: 22px;
+                background: rgba(255, 255, 255, 0.18);
+                margin: 0 0.25rem;
+            }
+
+            /* Войти (ghost) */
+            .nav-btn-ghost {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 400;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.8);
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                border: 1px solid transparent;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s;
+                white-space: nowrap;
+            }
+            .nav-btn-ghost:hover {
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.25);
+            }
+
+            /* Регистрация (белая таблетка) */
+            .nav-btn-register {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 500;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: var(--ocean-deep);
+                background: #fff;
+                padding: 0.5rem 1.1rem;
+                border-radius: 50px;
+                border: 1px solid #fff;
+                transition:
+                    background 0.2s,
+                    color 0.2s,
+                    border-color 0.2s;
+                white-space: nowrap;
+            }
+            .nav-btn-register:hover {
+                background: var(--aqua);
+                border-color: var(--aqua);
+            }
+
+            /* Бургер (мобайл) */
+            .burger {
+                display: none;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                padding: 4px;
+                background: none;
+                border: none;
+                justify-self: end;
+            }
+            .burger span {
+                display: block;
+                width: 24px;
+                height: 2px;
+                background: #fff;
+                border-radius: 2px;
+                transition:
+                    transform 0.3s,
+                    opacity 0.3s;
+            }
+
+            /* Мобильное меню */
+            .mobile-nav {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 46, 61, 0.97);
+                z-index: 99;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 1.4rem;
+            }
+            .mobile-nav.open {
+                display: flex;
+            }
+            .mobile-nav a {
+                font-family: var(--ff-serif);
+                font-size: 1.9rem;
+                font-weight: 300;
+                font-style: italic;
+                color: #fff;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .mobile-nav a:hover {
+                color: var(--teal);
+            }
+            .mobile-nav-sep {
+                width: 40px;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.15);
+                margin: 0.3rem 0;
+            }
+            .mobile-nav-close {
+                position: absolute;
+                top: 1.4rem;
+                right: 5vw;
+                font-size: 1.8rem;
+                color: #fff;
+                cursor: pointer;
+                background: none;
+                border: none;
+                line-height: 1;
+            }
+
+            /* Адаптив */
+            @media (max-width: 900px) {
+                nav.nav-center {
+                    display: none;
+                }
+                .nav-actions {
+                    display: none;
+                }
+                .burger {
+                    display: flex;
+                }
+                header {
+                    grid-template-columns: 1fr auto;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-bg"></div>
+
+        <!-- ================================================
+     HEADER
+     ================================================ -->
+        <header id="header">
+            <!-- Зона 1: Лого → главная -->
+            <a class="logo" href="/"
+                >🌊 Mauritius <span class="accent">Wildlife</span></a
+            >
+
+            <!-- Зона 2: Центральная навигация -->
+            <nav class="nav-center">
+                <a href="/about-us">О проекте</a>
+                <a href="/buy-merch">Купить мерч</a>
+                <a href="/donate" class="donate-pill">Пожертвовать</a>
+            </nav>
+
+            <!-- Зона 3: Правые действия -->
+            <div class="nav-actions">
+                <a
+                    href="/get-all-from-cart"
+                    class="nav-icon-btn"
+                    data-tip="Корзина"
+                    aria-label="Корзина"
+                >
+                    <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path
+                            d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                        />
+                    </svg>
+                </a>
+                <a
+                    href="/my-wallet"
+                    class="nav-icon-btn"
+                    data-tip="Кошелёк"
+                    aria-label="Кошелёк"
+                >
+                    <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <rect x="1" y="4" width="22" height="16" rx="2" />
+                        <path d="M16 12h.01" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Бургер (только мобайл) -->
+            <button class="burger" id="burgerBtn" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
+        </header>
+
+        <!-- Мобильное меню -->
+        <div class="mobile-nav" id="mobileNav">
+            <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+            <a href="/about-us">О проекте</a>
+            <a href="/buy-merch">Купить мерч</a>
+            <a href="/donate">Пожертвовать</a>
+            <div class="mobile-nav-sep"></div>
+            <a href="/get-all-from-cart">Корзина</a>
+            <a href="/my-wallet">Кошелёк</a>
+        </div>
+
+        <div class="mobile-nav" id="mobileNav">
+            <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+            <a href="/about-us">О проекте</a>
+            <a href="/buy-merch">Купить мерч</a>
+            <a href="/donate">Пожертвовать</a>
+            <div class="mobile-nav-sep"></div>
+            <a href="/get-all-from-cart">Корзина</a>
+            <a href="/my-wallet">Кошелёк</a>
+        </div>
+
+        <!-- ================================================
+     MAIN
+     ================================================ -->
+        <div class="page-content">
+            <div class="page-header">
+                <p class="page-label">Ваш выбор</p>
+                <h1 class="page-title">Моя <em>корзина</em></h1>
+            </div>
+
+            {{if .}}
+            <div class="cart-list">
+                {{range .}}
+                <div class="cart-item">
+                    <div class="item-info">
+                        <div class="item-name">{{.Name}}</div>
+                        <div class="item-desc">{{.Description}}</div>
+                        <div class="item-price">{{.Price}} ₽</div>
+                    </div>
+                    <div class="item-right">
+                        <div class="item-quantity">
+                            <svg
+                                width="13"
+                                height="13"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <line x1="8" y1="6" x2="21" y2="6" />
+                                <line x1="8" y1="12" x2="21" y2="12" />
+                                <line x1="8" y1="18" x2="21" y2="18" />
+                                <line x1="3" y1="6" x2="3.01" y2="6" />
+                                <line x1="3" y1="12" x2="3.01" y2="12" />
+                                <line x1="3" y1="18" x2="3.01" y2="18" />
+                            </svg>
+                            {{.Quantity}} шт.
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+
+            {{else}}
+
+            <div class="empty-cart">
+                <div class="empty-icon">🛒</div>
+                <h2>
+                    Корзина
+                    <em style="font-style: italic; color: var(--ocean-light)"
+                        >пуста</em
+                    >
+                </h2>
+                <p>
+                    Здесь пока ничего нет. Загляните в магазин — там есть
+                    кое-что особенное.
+                </p>
+                <a href="/buy-merch" class="btn-shop">
+                    <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"
+                        />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                    В магазин
+                </a>
+            </div>
+
+            {{end}}
+        </div>
+
+        <!-- ================================================
+     FOOTER
+     ================================================ -->
+        <footer>
+            <span class="footer-logo">🌊 Mauritius Wildlife</span>
+            <span>© 2025 Mauritius Wildlife. Все права защищены.</span>
+            <div class="footer-socials">
+                <span title="Instagram">📸</span>
+                <span title="Twitter/X">🐦</span>
+                <span title="Facebook">🌐</span>
+                <span title="YouTube">▶️</span>
+            </div>
+        </footer>
+
+        <script>
+            const burgerBtn = document.getElementById("burgerBtn");
+            const mobileNav = document.getElementById("mobileNav");
+            const mobileClose = document.getElementById("mobileNavClose");
+            burgerBtn.addEventListener("click", () =>
+                mobileNav.classList.add("open"),
+            );
+            mobileClose.addEventListener("click", () =>
+                mobileNav.classList.remove("open"),
+            );
+            mobileNav
+                .querySelectorAll("a")
+                .forEach((a) =>
+                    a.addEventListener("click", () =>
+                        mobileNav.classList.remove("open"),
+                    ),
+                );
+        </script>
+    </body>
 </html>

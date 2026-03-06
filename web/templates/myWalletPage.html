@@ -1,1 +1,1484 @@
-<h1>пузат сундук боярский</h1>
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Мой кошелёк — Mauritius Wildlife</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
+
+        <style>
+            /* ================================================
+   CSS VARIABLES & RESET
+   ================================================ */
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                --ocean-deep: #0a2e3d;
+                --ocean-mid: #0e5f74;
+                --ocean-light: #1a9baa;
+                --teal: #2bc4c4;
+                --aqua: #7ee8e8;
+                --foam: #e8f7f8;
+                --sand: #f5e9d3;
+                --warm-white: #fdfaf5;
+                --coral: #e07a5f;
+                --text-dark: #0f2027;
+                --text-mid: #2a5260;
+                --text-light: #6b9dab;
+                --ff-serif: "Cormorant Garamond", Georgia, serif;
+                --ff-sans: "DM Sans", sans-serif;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: var(--ff-sans);
+                background: var(--warm-white);
+                color: var(--text-dark);
+                overflow-x: hidden;
+                min-height: 100vh;
+            }
+
+            /* ================================================
+   HEADER
+   ================================================ */
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.2rem 5vw;
+                background: rgba(10, 46, 61, 0.92);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                box-shadow: 0 2px 24px rgba(0, 0, 0, 0.18);
+            }
+
+            .logo {
+                font-family: var(--ff-serif);
+                font-size: 1.55rem;
+                font-weight: 300;
+                color: #fff;
+                letter-spacing: 0.04em;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.45rem;
+            }
+            .logo span.accent {
+                color: var(--aqua);
+                font-style: italic;
+            }
+
+            nav {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                flex-wrap: wrap;
+            }
+            nav a {
+                font-family: var(--ff-sans);
+                font-size: 0.82rem;
+                font-weight: 400;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.85);
+                padding: 0.5rem 1.1rem;
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                border-radius: 50px;
+                transition:
+                    color 0.25s,
+                    border-color 0.25s,
+                    background 0.25s;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+            }
+            nav a:hover {
+                color: #fff;
+                border-color: var(--teal);
+                background: rgba(43, 196, 196, 0.12);
+            }
+            nav a.primary {
+                background: var(--teal);
+                border-color: var(--teal);
+                color: var(--ocean-deep);
+                font-weight: 500;
+            }
+            nav a.primary:hover {
+                background: var(--aqua);
+                border-color: var(--aqua);
+            }
+            nav a.active {
+                background: rgba(43, 196, 196, 0.18);
+                border-color: var(--teal);
+                color: var(--aqua);
+            }
+
+            .burger {
+                display: none;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                padding: 4px;
+                background: none;
+                border: none;
+            }
+            .burger span {
+                display: block;
+                width: 24px;
+                height: 2px;
+                background: #fff;
+                border-radius: 2px;
+            }
+
+            .mobile-nav {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 46, 61, 0.97);
+                z-index: 99;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+            .mobile-nav.open {
+                display: flex;
+            }
+            .mobile-nav a {
+                font-family: var(--ff-serif);
+                font-size: 2rem;
+                font-weight: 300;
+                font-style: italic;
+                color: #fff;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .mobile-nav a:hover {
+                color: var(--teal);
+            }
+            .mobile-nav-close {
+                position: absolute;
+                top: 1.4rem;
+                right: 5vw;
+                font-size: 1.8rem;
+                color: #fff;
+                cursor: pointer;
+                background: none;
+                border: none;
+                line-height: 1;
+            }
+
+            /* ================================================
+   PAGE BACKGROUND
+   ================================================ */
+            .page-bg {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                background:
+                    radial-gradient(
+                        ellipse 70% 50% at 10% 20%,
+                        rgba(14, 95, 116, 0.18) 0%,
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        ellipse 50% 60% at 90% 80%,
+                        rgba(43, 196, 196, 0.1) 0%,
+                        transparent 55%
+                    ),
+                    var(--warm-white);
+                pointer-events: none;
+            }
+
+            /* ================================================
+   MAIN CONTENT
+   ================================================ */
+            .page-content {
+                position: relative;
+                z-index: 1;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 8rem 6vw 5rem;
+            }
+
+            /* ================================================
+   WALLET CARD
+   ================================================ */
+            .wallet-wrap {
+                width: 100%;
+                max-width: 560px;
+                display: flex;
+                flex-direction: column;
+                gap: 1.8rem;
+            }
+
+            /* Header block */
+            .wallet-page-title {
+                text-align: center;
+            }
+            .wallet-page-title .section-label {
+                font-size: 0.7rem;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ocean-light);
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+            }
+            .wallet-page-title h1 {
+                font-family: var(--ff-serif);
+                font-size: clamp(2.4rem, 5vw, 3.4rem);
+                font-weight: 300;
+                color: var(--ocean-deep);
+                line-height: 1.12;
+            }
+            .wallet-page-title h1 em {
+                font-style: italic;
+                color: var(--ocean-light);
+            }
+
+            /* Main card */
+            .wallet-card {
+                background: linear-gradient(
+                    135deg,
+                    var(--ocean-deep) 0%,
+                    #0e4c62 55%,
+                    #0a7870 100%
+                );
+                border-radius: 24px;
+                padding: 2.4rem 2.4rem 2rem;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(10, 46, 61, 0.28);
+            }
+
+            /* Card decorative caustic blobs */
+            .wallet-card::before {
+                content: "";
+                position: absolute;
+                width: 300px;
+                height: 300px;
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle,
+                    rgba(43, 196, 196, 0.18) 0%,
+                    transparent 70%
+                );
+                top: -80px;
+                right: -60px;
+                pointer-events: none;
+            }
+            .wallet-card::after {
+                content: "";
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle,
+                    rgba(126, 232, 232, 0.12) 0%,
+                    transparent 70%
+                );
+                bottom: -40px;
+                left: 10px;
+                pointer-events: none;
+            }
+
+            .wallet-card-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 2rem;
+            }
+
+            .wallet-brand {
+                font-family: var(--ff-serif);
+                font-size: 1.1rem;
+                font-weight: 300;
+                color: rgba(255, 255, 255, 0.6);
+                font-style: italic;
+                letter-spacing: 0.03em;
+            }
+
+            .wallet-chip {
+                width: 42px;
+                height: 32px;
+                background: linear-gradient(135deg, #d4af6e, #f5d78e, #c8963a);
+                border-radius: 6px;
+                opacity: 0.85;
+            }
+
+            /* Balance */
+            .wallet-balance-label {
+                font-size: 0.68rem;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: rgba(255, 255, 255, 0.45);
+                margin-bottom: 0.4rem;
+                position: relative;
+                z-index: 1;
+            }
+            .wallet-balance-amount {
+                font-family: var(--ff-serif);
+                font-size: clamp(3rem, 8vw, 4.4rem);
+                font-weight: 300;
+                color: #fff;
+                line-height: 1;
+                margin-bottom: 0.2rem;
+                position: relative;
+                z-index: 1;
+            }
+            .wallet-balance-amount .currency {
+                font-size: 0.45em;
+                color: var(--aqua);
+                vertical-align: super;
+                font-style: normal;
+                font-family: var(--ff-sans);
+            }
+
+            .wallet-card-bottom {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                margin-top: 2.2rem;
+                position: relative;
+                z-index: 1;
+            }
+
+            .wallet-id-label {
+                font-size: 0.62rem;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: rgba(255, 255, 255, 0.4);
+                margin-bottom: 0.2rem;
+            }
+            .wallet-id-value {
+                font-family: var(--ff-sans);
+                font-size: 0.9rem;
+                font-weight: 400;
+                color: rgba(255, 255, 255, 0.8);
+                letter-spacing: 0.08em;
+            }
+
+            .wallet-status {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+                font-size: 0.72rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--teal);
+            }
+            .wallet-status-dot {
+                width: 8px;
+                height: 8px;
+                background: var(--teal);
+                border-radius: 50%;
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                50% {
+                    opacity: 0.5;
+                    transform: scale(1.3);
+                }
+            }
+
+            /* Action buttons */
+            .wallet-actions {
+                display: flex;
+                gap: 1rem;
+            }
+
+            .btn-topup {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.55rem;
+                font-family: var(--ff-sans);
+                font-size: 0.9rem;
+                font-weight: 500;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--ocean-deep);
+                background: var(--teal);
+                padding: 1rem 1.6rem;
+                border-radius: 50px;
+                border: none;
+                cursor: pointer;
+                transition:
+                    background 0.25s,
+                    transform 0.2s,
+                    box-shadow 0.25s;
+            }
+            .btn-topup:hover {
+                background: var(--aqua);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 32px rgba(43, 196, 196, 0.35);
+            }
+
+            .btn-history {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                font-family: var(--ff-sans);
+                font-size: 0.9rem;
+                font-weight: 400;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--ocean-mid);
+                background: transparent;
+                padding: 1rem 1.6rem;
+                border-radius: 50px;
+                border: 1.5px solid var(--ocean-mid);
+                cursor: pointer;
+                text-decoration: none;
+                transition:
+                    background 0.25s,
+                    color 0.25s,
+                    transform 0.2s;
+            }
+            .btn-history:hover {
+                background: var(--ocean-mid);
+                color: #fff;
+                transform: translateY(-2px);
+            }
+
+            /* ================================================
+   TOP-UP MODAL
+   ================================================ */
+            .modal-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 46, 61, 0.65);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                z-index: 200;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+            .modal-overlay.open {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .modal {
+                background: var(--warm-white);
+                border-radius: 24px;
+                padding: 2.4rem 2.4rem 2rem;
+                width: 100%;
+                max-width: 420px;
+                box-shadow: 0 32px 80px rgba(10, 46, 61, 0.25);
+                transform: translateY(24px) scale(0.97);
+                transition: transform 0.35s cubic-bezier(0.22, 0.68, 0, 1.2);
+                position: relative;
+            }
+            .modal-overlay.open .modal {
+                transform: translateY(0) scale(1);
+            }
+
+            .modal-close {
+                position: absolute;
+                top: 1.2rem;
+                right: 1.4rem;
+                font-size: 1.4rem;
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--text-light);
+                line-height: 1;
+                transition: color 0.2s;
+            }
+            .modal-close:hover {
+                color: var(--ocean-deep);
+            }
+
+            .modal-icon {
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                background: var(--foam);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1.2rem;
+            }
+
+            .modal h2 {
+                font-family: var(--ff-serif);
+                font-size: 1.9rem;
+                font-weight: 300;
+                color: var(--ocean-deep);
+                margin-bottom: 0.3rem;
+                line-height: 1.2;
+            }
+            .modal h2 em {
+                font-style: italic;
+                color: var(--ocean-light);
+            }
+
+            .modal-sub {
+                font-size: 0.88rem;
+                color: var(--text-light);
+                font-weight: 300;
+                margin-bottom: 1.8rem;
+                line-height: 1.55;
+            }
+
+            /* Amount input */
+            .amount-field {
+                display: flex;
+                align-items: center;
+                border: 1.5px solid #d0e4ea;
+                border-radius: 14px;
+                overflow: hidden;
+                transition:
+                    border-color 0.25s,
+                    box-shadow 0.25s;
+                background: #fff;
+                margin-bottom: 1rem;
+            }
+            .amount-field:focus-within {
+                border-color: var(--teal);
+                box-shadow: 0 0 0 4px rgba(43, 196, 196, 0.12);
+            }
+            .amount-currency {
+                padding: 0 1rem;
+                font-family: var(--ff-serif);
+                font-size: 1.5rem;
+                font-weight: 300;
+                color: var(--ocean-light);
+                font-style: italic;
+                background: var(--foam);
+                height: 100%;
+                display: flex;
+                align-items: center;
+                border-right: 1.5px solid #d0e4ea;
+                min-height: 58px;
+            }
+            .amount-input {
+                flex: 1;
+                border: none;
+                outline: none;
+                font-family: var(--ff-sans);
+                font-size: 1.35rem;
+                font-weight: 300;
+                color: var(--ocean-deep);
+                padding: 0 1.2rem;
+                background: transparent;
+                min-height: 58px;
+                width: 100%;
+            }
+            .amount-input::placeholder {
+                color: #c0d8e0;
+            }
+
+            /* Quick amount chips */
+            .quick-amounts {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                margin-bottom: 1.6rem;
+            }
+            .quick-chip {
+                font-size: 0.78rem;
+                font-weight: 400;
+                letter-spacing: 0.05em;
+                color: var(--ocean-mid);
+                background: var(--foam);
+                border: 1px solid #c4dde5;
+                border-radius: 50px;
+                padding: 0.3rem 0.85rem;
+                cursor: pointer;
+                transition:
+                    background 0.2s,
+                    border-color 0.2s,
+                    color 0.2s;
+            }
+            .quick-chip:hover,
+            .quick-chip.selected {
+                background: var(--teal);
+                border-color: var(--teal);
+                color: var(--ocean-deep);
+            }
+
+            /* Error message */
+            .modal-error {
+                font-size: 0.8rem;
+                color: var(--coral);
+                margin-bottom: 0.8rem;
+                min-height: 1rem;
+                display: none;
+            }
+            .modal-error.show {
+                display: block;
+            }
+
+            /* Confirm button */
+            .btn-confirm {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.55rem;
+                font-family: var(--ff-sans);
+                font-size: 0.92rem;
+                font-weight: 500;
+                letter-spacing: 0.07em;
+                text-transform: uppercase;
+                color: var(--ocean-deep);
+                background: var(--teal);
+                padding: 1rem;
+                border-radius: 50px;
+                border: none;
+                cursor: pointer;
+                transition:
+                    background 0.25s,
+                    transform 0.2s,
+                    box-shadow 0.25s;
+            }
+            .btn-confirm:hover {
+                background: var(--aqua);
+                transform: translateY(-1px);
+                box-shadow: 0 6px 24px rgba(43, 196, 196, 0.35);
+            }
+            .btn-confirm:disabled {
+                background: #c0d8e0;
+                color: #7a9daa;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+            /* Success state */
+            .modal-success {
+                text-align: center;
+                padding: 1rem 0 0.5rem;
+                display: none;
+            }
+            .modal-success.show {
+                display: block;
+            }
+            .modal-success-icon {
+                width: 64px;
+                height: 64px;
+                background: linear-gradient(135deg, var(--teal), var(--aqua));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.2rem;
+                font-size: 1.8rem;
+            }
+            .modal-success h3 {
+                font-family: var(--ff-serif);
+                font-size: 1.6rem;
+                font-weight: 300;
+                color: var(--ocean-deep);
+                margin-bottom: 0.4rem;
+            }
+            .modal-success p {
+                font-size: 0.88rem;
+                color: var(--text-light);
+                line-height: 1.6;
+            }
+
+            /* ================================================
+   FOOTER
+   ================================================ */
+            footer {
+                position: relative;
+                z-index: 1;
+                background: var(--ocean-deep);
+                color: rgba(255, 255, 255, 0.45);
+                padding: 2.5rem 6vw;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1rem;
+                font-size: 0.82rem;
+                font-weight: 300;
+            }
+            .footer-logo {
+                font-family: var(--ff-serif);
+                font-size: 1.2rem;
+                font-weight: 300;
+                color: rgba(255, 255, 255, 0.65);
+                font-style: italic;
+            }
+            .footer-socials {
+                display: flex;
+                gap: 1.2rem;
+                font-size: 1.15rem;
+            }
+            .footer-socials span {
+                cursor: pointer;
+                opacity: 0.5;
+                transition: opacity 0.2s;
+            }
+            .footer-socials span:hover {
+                opacity: 1;
+            }
+
+            /* ================================================
+   RESPONSIVE
+   ================================================ */
+            @media (max-width: 768px) {
+                nav {
+                    display: none;
+                }
+                .burger {
+                    display: flex;
+                }
+                .wallet-actions {
+                    flex-direction: column;
+                }
+                footer {
+                    flex-direction: column;
+                    text-align: center;
+                }
+            }
+            @media (max-width: 480px) {
+                .wallet-card {
+                    padding: 1.8rem 1.5rem 1.6rem;
+                }
+                .modal {
+                    padding: 2rem 1.6rem 1.8rem;
+                }
+            }
+
+            /* ================================================
+   HEADER
+   ================================================ */
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                align-items: center;
+                padding: 1rem 4vw;
+                transition:
+                    background 0.4s,
+                    backdrop-filter 0.4s,
+                    box-shadow 0.4s;
+            }
+            header.scrolled {
+                background: rgba(10, 46, 61, 0.9);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                box-shadow:
+                    0 1px 0 rgba(255, 255, 255, 0.06),
+                    0 4px 32px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Лого */
+            .logo {
+                font-family: var(--ff-serif);
+                font-size: 1.5rem;
+                font-weight: 300;
+                color: #fff;
+                letter-spacing: 0.04em;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+            }
+            .logo span.accent {
+                color: var(--aqua);
+                font-style: italic;
+            }
+
+            /* Центральная навигация */
+            nav.nav-center {
+                display: flex;
+                align-items: center;
+                gap: 0.2rem;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 50px;
+                padding: 0.3rem 0.4rem;
+            }
+            nav.nav-center a {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 400;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.75);
+                padding: 0.45rem 1rem;
+                border-radius: 50px;
+                transition:
+                    color 0.2s,
+                    background 0.2s;
+                white-space: nowrap;
+            }
+            nav.nav-center a:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.1);
+            }
+            nav.nav-center a.donate-pill {
+                background: var(--teal);
+                color: var(--ocean-deep);
+                font-weight: 500;
+                padding: 0.45rem 1.2rem;
+            }
+            nav.nav-center a.donate-pill:hover {
+                background: var(--aqua);
+            }
+
+            /* Правые действия */
+            .nav-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                justify-content: flex-end;
+            }
+
+            /* Иконки-кружки (корзина, кошелёк) */
+            .nav-icon-btn {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                background: rgba(255, 255, 255, 0.06);
+                color: rgba(255, 255, 255, 0.75);
+                text-decoration: none;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s,
+                    background 0.2s;
+                cursor: pointer;
+            }
+            .nav-icon-btn:hover {
+                color: #fff;
+                border-color: var(--teal);
+                background: rgba(43, 196, 196, 0.12);
+            }
+            /* Тултип */
+            .nav-icon-btn::after {
+                content: attr(data-tip);
+                position: absolute;
+                top: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(10, 46, 61, 0.95);
+                color: #fff;
+                font-size: 0.7rem;
+                font-family: var(--ff-sans);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                white-space: nowrap;
+                padding: 0.3rem 0.65rem;
+                border-radius: 6px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.15s;
+            }
+            .nav-icon-btn:hover::after {
+                opacity: 1;
+            }
+
+            /* Разделитель */
+            .nav-divider {
+                width: 1px;
+                height: 22px;
+                background: rgba(255, 255, 255, 0.18);
+                margin: 0 0.25rem;
+            }
+
+            /* Войти (ghost) */
+            .nav-btn-ghost {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 400;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: rgba(255, 255, 255, 0.8);
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                border: 1px solid transparent;
+                transition:
+                    color 0.2s,
+                    border-color 0.2s;
+                white-space: nowrap;
+            }
+            .nav-btn-ghost:hover {
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.25);
+            }
+
+            /* Регистрация (белая таблетка) */
+            .nav-btn-register {
+                font-family: var(--ff-sans);
+                font-size: 0.8rem;
+                font-weight: 500;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                text-decoration: none;
+                color: var(--ocean-deep);
+                background: #fff;
+                padding: 0.5rem 1.1rem;
+                border-radius: 50px;
+                border: 1px solid #fff;
+                transition:
+                    background 0.2s,
+                    color 0.2s,
+                    border-color 0.2s;
+                white-space: nowrap;
+            }
+            .nav-btn-register:hover {
+                background: var(--aqua);
+                border-color: var(--aqua);
+            }
+
+            /* Бургер (мобайл) */
+            .burger {
+                display: none;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                padding: 4px;
+                background: none;
+                border: none;
+                justify-self: end;
+            }
+            .burger span {
+                display: block;
+                width: 24px;
+                height: 2px;
+                background: #fff;
+                border-radius: 2px;
+                transition:
+                    transform 0.3s,
+                    opacity 0.3s;
+            }
+
+            /* Мобильное меню */
+            .mobile-nav {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 46, 61, 0.97);
+                z-index: 99;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 1.4rem;
+            }
+            .mobile-nav.open {
+                display: flex;
+            }
+            .mobile-nav a {
+                font-family: var(--ff-serif);
+                font-size: 1.9rem;
+                font-weight: 300;
+                font-style: italic;
+                color: #fff;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .mobile-nav a:hover {
+                color: var(--teal);
+            }
+            .mobile-nav-sep {
+                width: 40px;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.15);
+                margin: 0.3rem 0;
+            }
+            .mobile-nav-close {
+                position: absolute;
+                top: 1.4rem;
+                right: 5vw;
+                font-size: 1.8rem;
+                color: #fff;
+                cursor: pointer;
+                background: none;
+                border: none;
+                line-height: 1;
+            }
+
+            /* Адаптив */
+            @media (max-width: 900px) {
+                nav.nav-center {
+                    display: none;
+                }
+                .nav-actions {
+                    display: none;
+                }
+                .burger {
+                    display: flex;
+                }
+                header {
+                    grid-template-columns: 1fr auto;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- PAGE BG -->
+        <div class="page-bg"></div>
+
+        <!-- ================================================
+     HEADER
+     ================================================ -->
+        <header id="header">
+            <!-- Зона 1: Лого → главная -->
+            <a class="logo" href="/"
+                >🌊 Mauritius <span class="accent">Wildlife</span></a
+            >
+
+            <!-- Зона 2: Центральная навигация -->
+            <nav class="nav-center">
+                <a href="/about-us">О проекте</a>
+                <a href="/buy-merch">Купить мерч</a>
+                <a href="/donate" class="donate-pill">Пожертвовать</a>
+            </nav>
+
+            <!-- Зона 3: Правые действия -->
+            <div class="nav-actions">
+                <a
+                    href="/get-all-from-cart"
+                    class="nav-icon-btn"
+                    data-tip="Корзина"
+                    aria-label="Корзина"
+                >
+                    <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path
+                            d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                        />
+                    </svg>
+                </a>
+                <a
+                    href="/my-wallet"
+                    class="nav-icon-btn"
+                    data-tip="Кошелёк"
+                    aria-label="Кошелёк"
+                >
+                    <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <rect x="1" y="4" width="22" height="16" rx="2" />
+                        <path d="M16 12h.01" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Бургер (только мобайл) -->
+            <button class="burger" id="burgerBtn" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
+        </header>
+
+        <!-- Мобильное меню -->
+        <div class="mobile-nav" id="mobileNav">
+            <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+            <a href="/about-us">О проекте</a>
+            <a href="/buy-merch">Купить мерч</a>
+            <a href="/donate">Пожертвовать</a>
+            <div class="mobile-nav-sep"></div>
+            <a href="/get-all-from-cart">Корзина</a>
+            <a href="/my-wallet">Кошелёк</a>
+        </div>
+
+        <!-- Mobile nav -->
+        <div class="mobile-nav" id="mobileNav">
+            <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+            <a href="/buy-merch">Купить мерч</a>
+            <a href="/donate">Пожертвовать</a>
+            <a href="/about-us">О проекте</a>
+            <a href="/get-all-from-cart">Корзина</a>
+            <a href="/my-wallet">Кошелёк</a>
+        </div>
+
+        <!-- ================================================
+     MAIN CONTENT
+     ================================================ -->
+        <div class="page-content">
+            <div class="wallet-wrap">
+                <!-- Page title -->
+                <div class="wallet-page-title">
+                    <p class="section-label">Личный счёт</p>
+                    <h1>Мой <em>кошелёк</em></h1>
+                </div>
+
+                <!-- Wallet visual card -->
+                <div class="wallet-card">
+                    <div class="wallet-card-top">
+                        <div class="wallet-brand">🌊 Mauritius Wildlife</div>
+                        <div class="wallet-chip"></div>
+                    </div>
+
+                    <div class="wallet-balance-label">Баланс</div>
+                    <div class="wallet-balance-amount">
+                        <span class="currency">₽</span
+                        ><!--
+        --><span id="balance-display">{{.Balance}}</span>
+                    </div>
+
+                    <div class="wallet-card-bottom">
+                        <div class="wallet-id-block">
+                            <div class="wallet-id-label">ID кошелька</div>
+                            <div class="wallet-id-value" id="wallet-id-display">
+                                {{.ID}}
+                            </div>
+                        </div>
+                        <div class="wallet-status">
+                            <div class="wallet-status-dot"></div>
+                            Активен
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="wallet-actions">
+                    <button class="btn-topup" id="openTopupBtn">
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="16" />
+                            <line x1="8" y1="12" x2="16" y2="12" />
+                        </svg>
+                        Пополнить
+                    </button>
+                    <a href="/wallet-history" class="btn-history">
+                        <svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polyline points="1 4 1 10 7 10" />
+                            <path d="M3.51 15a9 9 0 1 0 .49-4.58" />
+                        </svg>
+                        История
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================================
+     TOP-UP MODAL
+     ================================================ -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div
+                class="modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-title"
+            >
+                <button
+                    class="modal-close"
+                    id="closeModalBtn"
+                    aria-label="Закрыть"
+                >
+                    ✕
+                </button>
+
+                <!-- Form view -->
+                <div id="modal-form-view">
+                    <div class="modal-icon">
+                        <svg
+                            width="26"
+                            height="26"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="var(--ocean-mid)"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="16" />
+                            <line x1="8" y1="12" x2="16" y2="12" />
+                        </svg>
+                    </div>
+                    <h2 id="modal-title">Пополнить <em>счёт</em></h2>
+                    <p class="modal-sub">
+                        Введите сумму для пополнения кошелька
+                    </p>
+
+                    <div class="amount-field">
+                        <span class="amount-currency">₽</span>
+                        <input
+                            type="number"
+                            class="amount-input"
+                            id="amount-input"
+                            placeholder="0"
+                            min="1"
+                            step="1"
+                            inputmode="numeric"
+                            autocomplete="off"
+                        />
+                    </div>
+
+                    <div class="quick-amounts">
+                        <button class="quick-chip" data-amount="100">
+                            100 ₽
+                        </button>
+                        <button class="quick-chip" data-amount="500">
+                            500 ₽
+                        </button>
+                        <button class="quick-chip" data-amount="1000">
+                            1 000 ₽
+                        </button>
+                        <button class="quick-chip" data-amount="5000">
+                            5 000 ₽
+                        </button>
+                    </div>
+
+                    <div class="modal-error" id="modal-error">
+                        Введите корректную сумму (от 1 ₽)
+                    </div>
+
+                    <button class="btn-confirm" id="confirmBtn" disabled>
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Подтвердить пополнение
+                    </button>
+                </div>
+
+                <!-- Success view -->
+                <div class="modal-success" id="modal-success-view">
+                    <div class="modal-success-icon">✓</div>
+                    <h3>Счёт пополнен!</h3>
+                    <p id="success-message">Ваш баланс успешно пополнен.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================================
+     FOOTER
+     ================================================ -->
+        <footer>
+            <span class="footer-logo">🌊 Mauritius Wildlife</span>
+            <span>© 2025 Mauritius Wildlife. Все права защищены.</span>
+            <div class="footer-socials">
+                <span title="Instagram">📸</span>
+                <span title="Twitter/X">🐦</span>
+                <span title="Facebook">🌐</span>
+                <span title="YouTube">▶️</span>
+            </div>
+        </footer>
+
+        <!-- ================================================
+     JAVASCRIPT
+     ================================================ -->
+        <script>
+            /* --- Header burger --- */
+            const burgerBtn = document.getElementById("burgerBtn");
+            const mobileNav = document.getElementById("mobileNav");
+            const mobileClose = document.getElementById("mobileNavClose");
+            burgerBtn.addEventListener("click", () =>
+                mobileNav.classList.add("open"),
+            );
+            mobileClose.addEventListener("click", () =>
+                mobileNav.classList.remove("open"),
+            );
+            mobileNav
+                .querySelectorAll("a")
+                .forEach((a) =>
+                    a.addEventListener("click", () =>
+                        mobileNav.classList.remove("open"),
+                    ),
+                );
+
+            /* --- Modal --- */
+            const overlay = document.getElementById("modalOverlay");
+            const openBtn = document.getElementById("openTopupBtn");
+            const closeBtn = document.getElementById("closeModalBtn");
+            const amountInput = document.getElementById("amount-input");
+            const confirmBtn = document.getElementById("confirmBtn");
+            const errorMsg = document.getElementById("modal-error");
+            const formView = document.getElementById("modal-form-view");
+            const successView = document.getElementById("modal-success-view");
+            const successMsg = document.getElementById("success-message");
+
+            function openModal() {
+                overlay.classList.add("open");
+                amountInput.value = "";
+                confirmBtn.disabled = true;
+                errorMsg.classList.remove("show");
+                formView.style.display = "";
+                successView.classList.remove("show");
+                document
+                    .querySelectorAll(".quick-chip")
+                    .forEach((c) => c.classList.remove("selected"));
+                setTimeout(() => amountInput.focus(), 350);
+            }
+            function closeModal() {
+                overlay.classList.remove("open");
+            }
+
+            openBtn.addEventListener("click", openModal);
+            closeBtn.addEventListener("click", closeModal);
+            overlay.addEventListener("click", (e) => {
+                if (e.target === overlay) closeModal();
+            });
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeModal();
+            });
+
+            /* --- Amount input validation --- */
+            amountInput.addEventListener("input", () => {
+                const val = parseFloat(amountInput.value);
+                const valid = val >= 1 && isFinite(val);
+                confirmBtn.disabled = !valid;
+                if (!valid && amountInput.value !== "") {
+                    errorMsg.classList.add("show");
+                } else {
+                    errorMsg.classList.remove("show");
+                }
+                // deselect chips if manually typed
+                document.querySelectorAll(".quick-chip").forEach((c) => {
+                    c.classList.toggle(
+                        "selected",
+                        parseFloat(c.dataset.amount) === val,
+                    );
+                });
+            });
+
+            /* --- Quick chips --- */
+            document.querySelectorAll(".quick-chip").forEach((chip) => {
+                chip.addEventListener("click", () => {
+                    const amount = chip.dataset.amount;
+                    amountInput.value = amount;
+                    confirmBtn.disabled = false;
+                    errorMsg.classList.remove("show");
+                    document
+                        .querySelectorAll(".quick-chip")
+                        .forEach((c) => c.classList.remove("selected"));
+                    chip.classList.add("selected");
+                });
+            });
+
+            /* --- Confirm: POST /top-up-wallet/<amount> --- */
+            confirmBtn.addEventListener("click", async () => {
+                const amount = parseFloat(amountInput.value);
+                if (!amount || amount < 1) {
+                    errorMsg.classList.add("show");
+                    return;
+                }
+
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = "Отправка...";
+
+                try {
+                    const response = await fetch(
+                        `/top-up-wallet/${encodeURIComponent(amount)}`,
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                        },
+                    );
+
+                    if (response.ok) {
+                        // Show success
+                        formView.style.display = "none";
+                        successView.classList.add("show");
+                        successMsg.textContent = `Ваш баланс пополнен на ${amount.toLocaleString("ru-RU")} ₽.`;
+
+                        // Auto-close after 2.5s
+                        setTimeout(closeModal, 2500);
+                    } else {
+                        errorMsg.textContent = `Ошибка сервера: ${response.status}. Попробуйте позже.`;
+                        errorMsg.classList.add("show");
+                        confirmBtn.disabled = false;
+                        confirmBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Подтвердить пополнение`;
+                    }
+                } catch (err) {
+                    errorMsg.textContent =
+                        "Нет соединения с сервером. Проверьте интернет.";
+                    errorMsg.classList.add("show");
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Подтвердить пополнение`;
+                }
+            });
+        </script>
+    </body>
+</html>

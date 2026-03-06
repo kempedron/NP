@@ -1,6 +1,7 @@
 package main
 
 import (
+	"NP/internal/middlewware"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -88,18 +89,19 @@ func (g *APIGateway) setRoutes() {
 	g.router.HandleFunc("/register", g.proxyToUserService).Methods("GET")
 	g.router.HandleFunc("/login", g.proxyToUserService).Methods("POST")
 	g.router.HandleFunc("/register", g.proxyToUserService).Methods("POST")
-	g.router.HandleFunc("/buy-merch", g.proxyToWebService).Methods("GET")
-	g.router.HandleFunc("/donate", g.proxyToWebService).Methods("GET")
-	g.router.HandleFunc("/donate/{category}/{username}/{moneySum}", g.proxyToWebService).Methods("POST")
 
-	bank := g.router.PathPrefix("/").Subrouter()
-	bank.HandleFunc("/my-wallet", g.proxyToBankService).Methods("GET")
+	protected := g.router.PathPrefix("/").Subrouter()
+	protected.Use(middlewware.JWTAuth)
 
-	orders := g.router.PathPrefix("/").Subrouter()
+	protected.HandleFunc("/donate", g.proxyToBankService).Methods("GET")
+	protected.HandleFunc("/donate/{category}/{username}/{moneySum}", g.proxyToBankService).Methods("POST")
+	protected.HandleFunc("/my-wallet", g.proxyToBankService).Methods("GET")
+	protected.HandleFunc("/top-up-wallet/{moneySum}", g.proxyToBankService).Methods("POST")
 
-	orders.HandleFunc("/add-to-cart/{product-id:[0-9]+}/{cart-id:[0-9]+}/{quantity:[0-9]+}", g.proxyToOrderService).Methods("POST")
-	orders.HandleFunc("/get-all-from-cart", g.proxyToOrderService).Methods("GET")
-
+	protected.HandleFunc("/add-to-cart/{product-id:[0-9]+}/{quantity:[0-9]+}", g.proxyToOrderService).Methods("POST")
+	protected.HandleFunc("/get-all-from-cart", g.proxyToOrderService).Methods("GET")
+	protected.HandleFunc("/buy-merch", g.proxyToWebService).Methods("GET")
+	protected.Use(middlewware.JWTAuth)
 }
 
 func NewAPIGateway(cfg *Config) *APIGateway {

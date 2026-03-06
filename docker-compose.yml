@@ -11,6 +11,7 @@ services:
       - ORDER_SERVICE_URL=http://order-service:8080
       - USER_SERVICE_URL=http://user-service:8080
       - WEB_SERVICE_URL=http://web-service:8080
+      - JWT_SECRET=1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930
       # - DB_HOST=db
       # - DB_PORT=5432
       # - DB_USER=dbUser
@@ -20,7 +21,7 @@ services:
       - backend
     depends_on:
       db:
-        condition: service_healthy   
+        condition: service_healthy
 
   web-service:
     build:
@@ -33,7 +34,24 @@ services:
       - DB_USER=dbUser
       - DB_PASSWORD=dbPassword
       - DB_NAME=my_db
-      - JWT_SECRET="1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930"
+      - JWT_SECRET=1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+  order-service:
+    build:
+      context: .
+      dockerfile: cmd/order-service/Dockerfile
+    environment:
+      - PORT=8080
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=dbUser
+      - DB_PASSWORD=dbPassword
+      - DB_NAME=my_db
+      - JWT_SECRET=1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930
     networks:
       - backend
     depends_on:
@@ -53,7 +71,7 @@ services:
       - DB_USER=dbUser
       - DB_PASSWORD=dbPassword
       - DB_NAME=my_db
-      - JWT_SECRET="1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930"
+      - JWT_SECRET=1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930
     networks:
       - backend
     depends_on:
@@ -61,6 +79,7 @@ services:
         condition: service_healthy
 
   user-service:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: cmd/user-service/Dockerfile
@@ -73,7 +92,7 @@ services:
       - DB_USER=dbUser
       - DB_PASSWORD=dbPassword
       - DB_NAME=my_db
-      - JWT_SECRET="1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930"
+      - JWT_SECRET=1b98902b7542349768e8da2c919c1a962dd9d189e330cd0e781ceb98633ea930
     networks:
       - backend
     depends_on:
@@ -85,15 +104,15 @@ services:
     container_name: mauritius_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: my_db                
-      POSTGRES_USER: dbUser              
-      POSTGRES_PASSWORD: dbPassword      
+      POSTGRES_DB: my_db
+      POSTGRES_USER: dbUser
+      POSTGRES_PASSWORD: dbPassword
       DB_HOST: db
       DB_PORT: 5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"                      
+      - "5432:5432"
     networks:
       - backend
     healthcheck:

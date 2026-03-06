@@ -1,13 +1,32 @@
-FROM golang:1.26-alpine AS builder
+FROM rust:latest AS builder
 WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/bin/web-service ./cmd/web-service
 
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    true
+
+COPY Cargo.toml Cargo.lock ./
+COPY cmd/web-service/Cargo.toml ./cmd/web-service/
+
+RUN mkdir -p cmd/web-service && echo "fn main() {}" > cmd/web-service/main.rs
+
+
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/app/target \
+    cargo build --manifest-path cmd/web-service/Cargo.toml --bin web-service --release && \
+    rm -f target/release/deps/web_service*
+
+COPY . .
+
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/app/target \
+    cargo build --manifest-path cmd/web-service/Cargo.toml --bin web-service --release && \
+    cp target/release/web-service /app/web-service
+#   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   копируем из кэш-тома в обычный слой образа
+
+FROM debian:bookworm-slim AS runtime
 WORKDIR /app
-COPY --from=builder /app/bin/web-service /app/web-service
-COPY --from=builder /app/web /app/web
+COPY --from=builder /app/web/templates ./web/templates
+COPY --from=builder /app/web-service ./web-service
+
 CMD ["/app/web-service"]
