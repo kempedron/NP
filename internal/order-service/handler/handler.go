@@ -63,6 +63,7 @@ func AddToCart(w http.ResponseWriter, r *http.Request) {
 }
 
 type ForRenderCart struct {
+	//ID        uint
 	Items     []service.RespForGetProducts
 	TotalCost uint
 }
@@ -82,6 +83,7 @@ func MakeGetAllCart(tmpl *template.Template) http.HandlerFunc {
 			totalCost += item.Price * item.Quantity
 		}
 		data := ForRenderCart{
+			//	ID:        id,
 			Items:     items,
 			TotalCost: totalCost,
 		}
@@ -98,6 +100,7 @@ func GetParamByUrl(name string, r *http.Request) int {
 	IdInt, err := strconv.Atoi(Id)
 	if err != nil {
 		log.Printf("error convert id to int: %s", err)
+		return -1
 	}
 	return IdInt
 }
@@ -112,6 +115,10 @@ func MakePurchaseCart(tmpl *template.Template) http.HandlerFunc {
 		}
 		err = service.PayCart(userID)
 		if err != nil {
+			if errors.Is(err, service.ErrInsufficientBalance) {
+				http.Error(w, "недостаточно средств для оплаты", http.StatusPaymentRequired)
+				return
+			}
 			log.Printf("error pay cart for user %d: %v", userID, err)
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
 			return
@@ -162,4 +169,26 @@ func MakeGetMyPurchases(tmpl *template.Template) http.HandlerFunc {
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
 		}
 	}
+}
+
+func DeletePurchaseFromCartHandler(w http.ResponseWriter, r *http.Request) {
+	userID, err := middlewware.GetUserIDFromRequest(r)
+	if err != nil {
+		log.Printf("error get userID from midlleware: %s", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	purchaseID := GetParamByUrl("product-id", r)
+	if purchaseID == -1 {
+		log.Printf("error get purchase_id from url: %s", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	err = service.DeletePurchaseFromCart(userID, uint(purchaseID))
+	if err != nil {
+		log.Printf("error delete purchase from cart: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/get-all-from-cart", http.StatusSeeOther)
 }

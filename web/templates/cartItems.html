@@ -625,6 +625,27 @@
                 opacity: 1;
             }
 
+            .btn-remove {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                border: 1px solid rgba(224, 122, 95, 0.3);
+                background: transparent;
+                color: var(--coral);
+                cursor: pointer;
+                transition:
+                    background 0.2s,
+                    border-color 0.2s,
+                    transform 0.2s;
+            }
+            .btn-remove:hover {
+                background: rgba(224, 122, 95, 0.1);
+                border-color: var(--coral);
+                transform: scale(1.1);
+            }
             /* ================================================
    ANIMATION
    ================================================ */
@@ -662,6 +683,16 @@
                     flex-direction: row;
                     align-items: center;
                     justify-content: space-between;
+                }
+            }
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(16px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
                 }
             }
         </style>
@@ -727,6 +758,29 @@
                         <path d="M16 12h.01" />
                     </svg>
                 </a>
+                <a
+                    href="/my-purchases"
+                    class="nav-icon-btn"
+                    data-tip="Мои покупки"
+                    aria-label="Мои покупки"
+                >
+                    <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.11-1.79V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.79 0z"
+                        />
+                        <polyline points="2.32 6.16 12 11 21.68 6.16" />
+                        <line x1="12" y1="22.76" x2="12" y2="11" />
+                    </svg>
+                </a>
             </div>
 
             <button class="burger" id="burgerBtn" aria-label="Открыть меню">
@@ -761,7 +815,7 @@
                     <div class="cart-summary-label">Итого к оплате</div>
                     <div class="cart-summary-total">{{.TotalCost}} ₽</div>
                 </div>
-                <form action="/purchase-cart" method="POST">
+                <form id="purchase-form" action="/purchase-cart" method="POST">
                     <button type="submit" class="btn-pay">
                         <svg
                             width="17"
@@ -779,6 +833,44 @@
                         Оплатить корзину
                     </button>
                 </form>
+
+                <script>
+                    document
+                        .getElementById("purchase-form")
+                        .addEventListener("submit", async (e) => {
+                            e.preventDefault();
+
+                            const btn = e.submitter;
+                            btn.disabled = true;
+
+                            try {
+                                const response = await fetch("/purchase-cart", {
+                                    method: "POST",
+                                });
+
+                                if (!response.ok) {
+                                    // читаем как текст — работает и с JSON, и с plain text
+                                    const text = await response.text();
+                                    let message;
+                                    try {
+                                        message = JSON.parse(text).error;
+                                    } catch {
+                                        message =
+                                            text.trim() ||
+                                            "Что-то пошло не так";
+                                    }
+                                    showToast(message);
+                                    return;
+                                }
+
+                                window.location.href = "/my-purchases";
+                            } catch (err) {
+                                showToast("Ошибка соединения");
+                            } finally {
+                                btn.disabled = false;
+                            }
+                        });
+                </script>
             </div>
 
             <div class="cart-list">
@@ -791,28 +883,53 @@
                     </div>
                     <div class="item-right">
                         <div class="item-quantity">
-                            <svg
-                                width="13"
-                                height="13"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <line x1="8" y1="6" x2="21" y2="6" />
-                                <line x1="8" y1="12" x2="21" y2="12" />
-                                <line x1="8" y1="18" x2="21" y2="18" />
-                                <line x1="3" y1="6" x2="3.01" y2="6" />
-                                <line x1="3" y1="12" x2="3.01" y2="12" />
-                                <line x1="3" y1="18" x2="3.01" y2="18" />
-                            </svg>
+                            <!-- svg -->
                             {{.Quantity}} шт.
                         </div>
+                        <form action="/delete-from-cart/{{.ID}}" method="POST">
+                            <button type="submit" class="btn-remove">
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <polyline points="3 6 5 6 21 6" />
+                                    <path
+                                        d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+                                    />
+                                    <path d="M10 11v6M14 11v6" />
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                 </div>
                 {{end}}
+                <form action="/delete-from-cart/{{.items.ID}}" method="POST">
+                    <button type="submit" class="btn-remove">
+                        удалить
+                        <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polyline points="3 6 5 6 21 6" />
+                            <path
+                                d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+                            />
+                            <path d="M10 11v6M14 11v6" />
+                        </svg>
+                    </button>
+                </form>
             </div>
 
             {{else}}
@@ -884,6 +1001,27 @@
                         mobileNav.classList.remove("open"),
                     ),
                 );
+            function showToast(message, isError = true) {
+                const toast = document.createElement("div");
+                toast.textContent = message;
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 2rem;
+                    right: 2rem;
+                    background: ${isError ? "#e07a5f" : "#2bc4c4"};
+                    color: white;
+                    padding: 0.9rem 1.6rem;
+                    border-radius: 50px;
+                    font-family: 'DM Sans', sans-serif;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+                    z-index: 9999;
+                    animation: slideUp 0.3s ease;
+                `;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3500);
+            }
         </script>
     </body>
 </html>

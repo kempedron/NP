@@ -756,7 +756,7 @@
                 </a>
                 <a
                     href="/my-wallet"
-                    class="nav-icon-btn"
+                    class="nav-icon-btn active"
                     data-tip="Кошелёк"
                     aria-label="Кошелёк"
                 >
@@ -772,6 +772,29 @@
                     >
                         <rect x="1" y="4" width="22" height="16" rx="2" />
                         <path d="M16 12h.01" />
+                    </svg>
+                </a>
+                <a
+                    href="/my-purchases"
+                    class="nav-icon-btn active"
+                    data-tip="Мои покупки"
+                    aria-label="Мои покупки"
+                >
+                    <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.11-1.79V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.79 0z"
+                        />
+                        <polyline points="2.32 6.16 12 11 21.68 6.16" />
+                        <line x1="12" y1="22.76" x2="12" y2="11" />
                     </svg>
                 </a>
                 <div class="nav-divider"></div>
@@ -866,8 +889,9 @@
                                     Заказ №{{$purchase.ID}}
                                 </div>
                                 <div class="purchase-group-meta">
-                                    {{$purchase.CreatedAt.Format "02.01.2006, 15:04"}} · {{len $purchase.PurchasesList}}
-                                    товар(а)
+                                    {{$purchase.CreatedAt.Format
+                                    "02.01.2006,15:04"}} · {{len
+                                    $purchase.PurchasesList}} товар(а)
                                 </div>
                             </div>
                         </div>

@@ -11,6 +11,9 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+var ErrCartEmpty = errors.New("ошибка, на карта не хватает денег")
+var ErrInsufficientBalance = errors.New("insufficient balance in bank account")
+
 func AddProductByIdToCart(productId uint, cartId uint, quantity uint) error {
 
 	catrItem := models.CartItem{
@@ -65,9 +68,9 @@ func GettAllProductsFromCart(userID uint) ([]RespForGetProducts, error) {
 
 	var result []RespForGetProducts
 
-	for ind, val := range items {
+	for _, val := range items {
 		n := RespForGetProducts{
-			ID:          ind,
+			ID:          int(val.ID),
 			Name:        val.Product.Name,
 			Price:       val.Product.Price,
 			Quantity:    val.Quantity,
@@ -97,7 +100,7 @@ func PayCart(userID uint) error {
 		}
 	}
 	if totalCost == 0 {
-		return fmt.Errorf("cart is empty for user %d", userID)
+		return fmt.Errorf("cart is empty for user %d: %w", userID, ErrCartEmpty)
 	}
 
 	var bankAccount models.BankAccount
@@ -110,7 +113,7 @@ func PayCart(userID uint) error {
 	}
 
 	if totalCost > bankAccount.Balance {
-		return fmt.Errorf("insufficient balance in bank account for user %d", userID)
+		return fmt.Errorf("insufficient balance in bank account for user %d: %w", userID, ErrInsufficientBalance)
 	}
 
 	if err := database.PayPurchase(userID, totalCost); err != nil {
@@ -134,4 +137,15 @@ func GetMyPurchases(userID uint) ([]models.Purchases, error) {
 		return nil, fmt.Errorf("error find purchases for user %d: %w", userID, err)
 	}
 	return purchases, nil
+}
+
+func DeletePurchaseFromCart(userID uint, cartItemID uint) error {
+	var cart models.Cart
+	if err := database.DB.Where("user_id = ?", userID).First(&cart).Error; err != nil {
+		return fmt.Errorf("cart not found: %w", err)
+	}
+	if err := database.DB.Where("id = ? AND cart_id = ?", cartItemID, cart.ID).Delete(&models.CartItem{}).Error; err != nil {
+		return fmt.Errorf("error delete purchase: %w", err)
+	}
+	return nil
 }

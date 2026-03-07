@@ -4,7 +4,6 @@ import (
 	"NP/internal/database"
 	"NP/internal/jwt"
 	"NP/internal/models"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
@@ -15,6 +14,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
+
+var UserAlderyExist = errors.New("пользователь уже существует")
+var InvalidCredentials = errors.New("неверные учетные данные")
+var SomethingWentWrong = errors.New("что-то пошло не так")
 
 func MakeHandlerLoginPage(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -35,51 +38,31 @@ func MakeHandlerLogin(tmpl *template.Template) http.HandlerFunc {
 		password := r.FormValue("password")
 
 		if username == "" || password == "" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "username and password required"})
+			http.Error(w, "Имя пользователя и пароль обязательны", http.StatusBadRequest)
 			return
 		}
 		if len(password) < 6 {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "password must be at least 6 charactest"})
+			http.Error(w, "Пароль должен быть не менее 6 символов", http.StatusBadRequest)
 			return
 		}
 
 		var user models.User
 
 		if err := database.DB.Where("username = ?", username).First(&user).Error; err != nil {
-			log.Printf("error check username(%s): %s", username, err)
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(map[string]string{"error": "invalid authentication"})
+			http.Error(w, "Пользователь не найден", http.StatusNotFound)
 			return
 		}
 		if err := user.CheckPassword(password); err != nil {
-			log.Printf("error pass check: %s", err)
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(map[string]string{"error": "invalid authentication"})
+			http.Error(w, "Неверные учетные данные", http.StatusInternalServerError)
 			return
 		}
 
 		token, err := jwt.GenerateToken(user.ID, user.Username)
 		if err != nil {
-			log.Printf("error generate token: %s", err)
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": "Could not generate token"})
+			http.Error(w, "Что то пошло не так...", http.StatusInternalServerError)
 			return
 		}
 
-		if err := database.InitCart(user.ID); err != nil {
-			log.Fatalf("error init cart(when user login) for user-service: %s", err)
-		}
-
-		if err := database.InitBankAccount(user.ID); err != nil {
-			log.Fatalf("error init bank account(when user login) for user-service: %s", err)
-		}
-
-		fmt.Print("successfully set cookie after login")
 		http.SetCookie(w, &http.Cookie{
 			Name:     "jwt",
 			Value:    token,
@@ -96,7 +79,6 @@ func MakeHandlerLogin(tmpl *template.Template) http.HandlerFunc {
 			HttpOnly: false,
 			Path:     "/",
 		})
-		fmt.Print("redirecting")
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 
@@ -105,19 +87,16 @@ func MakeHandlerLogin(tmpl *template.Template) http.HandlerFunc {
 
 func MakeHandlerRegister(tmpl *template.Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("start reg func")
 
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
 		if username == "" || password == "" {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "username and password required"})
+			http.Error(w, "Имя пользователя и пароль обязательны", http.StatusBadRequest)
 			return
 		}
 		if len(password) < 6 {
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "password must be at least 6 charactest"})
+			http.Error(w, "Пароль должен быть не менее 6 символов", http.StatusConflict)
 			return
 		}
 
@@ -125,53 +104,52 @@ func MakeHandlerRegister(tmpl *template.Template) http.HandlerFunc {
 
 		err := database.DB.Where("username = ?", username).First(&user).Error
 		if err == nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "username aldery exist"})
+			if errors.Is(err, UserAlderyExist) {
+				http.Error(w, "Пользователь уже существует", http.StatusConflict)
+				return
+			}
+			http.Error(w, "Что то пошло не так...", http.StatusInternalServerError)
 			return
 		}
 
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			log.Printf("error db(register user): %v", err)
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": "internal server error"})
+			http.Error(w, "Что то пошло не так...", http.StatusInternalServerError)
 			return
 		}
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
-			log.Printf("error hasing password")
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": "internal server error"})
+			http.Error(w, "Что то пошло не так...", http.StatusInternalServerError)
 			return
 		}
 		newUser := &models.User{
 			Username:     username,
 			PasswordHash: string(hashedPassword),
 		}
-		fmt.Println(2)
 
 		if err := database.DB.Create(&newUser).Error; err != nil {
-			log.Printf("error saving user to db: %v", err)
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(map[string]string{"error": "could not create user"})
+			log.Printf("ошибка создания пользователя: %s", err)
+			http.Error(w, "Что то пошло не так...", http.StatusInternalServerError)
 			return
 		}
 
 		token, err := jwt.GenerateToken(newUser.ID, newUser.Username)
 		if err != nil {
-			log.Printf("error ganerate token for new user: %v", err)
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			log.Printf("ошибка создания токена: %s", err)
+			http.Error(w, "Что то пошло не так...", http.StatusInternalServerError)
 			return
 		}
 
-		if err := database.InitCart(user.ID); err != nil {
-			log.Fatalf("error init cart(when user login) for user-service: %s", err)
+		if err := database.InitCart(newUser.ID); err != nil {
+			log.Printf("ошибка создания корзины: %s", err)
+			http.Error(w, "Что то пошло не так...", http.StatusInternalServerError)
+			return
 		}
 
-		fmt.Println(3)
+		if err := database.InitBankAccount(newUser.ID); err != nil {
+			log.Printf("ошибка создания банковского счета: %s", err)
+			http.Error(w, "Что то пошло не так...", http.StatusInternalServerError)
+			return
+		}
 
 		http.SetCookie(w, &http.Cookie{
 			Name:     "jwt",
@@ -184,10 +162,9 @@ func MakeHandlerRegister(tmpl *template.Template) http.HandlerFunc {
 		http.SetCookie(w, &http.Cookie{
 			Name:     "logged_in",
 			Value:    "true",
-			HttpOnly: true,
+			HttpOnly: false,
 			Path:     "/",
 		})
-		println("end reg func")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

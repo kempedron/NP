@@ -104,6 +104,7 @@ func (g *APIGateway) setRoutes() {
 	protected.HandleFunc("/buy-merch", g.proxyToWebService).Methods("GET")
 	protected.HandleFunc("/purchase-cart", g.proxyToOrderService).Methods("POST")
 	protected.HandleFunc("/my-purchases", g.proxyToOrderService).Methods("GET")
+	protected.HandleFunc("/delete-from-cart/{product-id:[0-9]+}", g.proxyToOrderService).Methods("POST")
 	protected.Use(middlewware.JWTAuth)
 }
 
